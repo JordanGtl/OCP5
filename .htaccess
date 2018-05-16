@@ -1,0 +1,9 @@
+Options +FollowSymlinks
+RewriteEngine On
+RewriteRule ^Posts$ index.php?page=1 [L] 
+RewriteRule ^Contact$ index.php?page=2 [L] 
+RewriteRule ^Connexion$ index.php?page=3 [L] 
+RewriteRule ^Inscription$ index.php?page=4 [L] 
+RewriteRule ^404$ index.php?page=5 [L] 
+
+ErrorDocument 404 /index.php?page=5
