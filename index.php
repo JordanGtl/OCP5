@@ -16,6 +16,7 @@ catch(Exception $e)
 }
 
 # Controler
+include('model/Membre.class.php');
 include('controler/Parseur.class.php');
 include('controler/Frontend.class.php');
 
@@ -25,7 +26,7 @@ $parseur = new Parseur();
 $front = new Frontend($db, $parseur);
 
 # variables du parseurs
-$parseur->classes = array('front' => $front);
+$parseur->classes = array('front' => $front, 'membres' => new Membres($db));
 $parseur->vars = array('title' => 'Jordan GUILLOT - Développeur');
 
 # Template

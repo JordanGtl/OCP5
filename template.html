@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>{title}</title>
+    <title>{{title}}</title>
 
     <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/public/css/freelancer.min.css" rel="stylesheet">
@@ -43,28 +43,18 @@
                     <li class="page-scroll">
                         <a href="/index.php?page=1">Posts</a>
                     </li>
-					<?php
-					
-					if(!$front->IsLogged())
-					{
-					?>
-                    <li class="page-scroll">
+					{{IF:membres->IsLogged()}}
+                   <li class="page-scroll">
+                        <a href="/index.php?page=5">Mon Compte</a>
+                    </li>
+					{{ELSE}}
+					 <li class="page-scroll">
                         <a href="/index.php?page=3">Connexion</a>
                     </li>
                     <li class="page-scroll">
                         <a href="/index.php?page=4">Inscription</a>
                     </li>
-					<?php
-					}
-					else
-					{
-					?>
-					<li class="page-scroll">
-                        <a href="/index.php?page=5">Mon Compte</a>
-                    </li>
-					<?php
-					}
-					?>
+					{{ENDIF}}
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
@@ -72,7 +62,7 @@
         <!-- /.container-fluid -->
     </nav>
 	
-	{front->GetPage()}
+	{{front->GetPage()}}
 
      <!-- Footer -->
     <footer class="text-center">
@@ -104,7 +94,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        Copyright &copy; Jordan GUILLOT <?php echo date('Y', time()); ?>  - <a href="/index.php?page=6">Administration</a>
+                        Copyright &copy; Jordan GUILLOT 2018  - <a href="/index.php?page=6">Administration</a>
                     </div>
                 </div>
             </div>

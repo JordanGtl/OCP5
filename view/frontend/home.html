@@ -102,7 +102,7 @@
                     <p>Je suis un jeune développeur qui cherche toujours a s'améliorer et perfectionner sont travail. L'envie d'apprendre et la soif de connaissance dans le milieu du développement sont mes principal source de motiviations.</p>
                 </div>
                 <div class="col-lg-4">
-                    <p>Pour moi le site parfait n'existe pas, c'ets pour cela qu'il faut améliorer et revenir en continue sur le travail déjà éffectuer afin de l'améliorer, l'optimiser. C'est le but premeir de mon cms GTL.</p>
+                    <p>Pour moi le site parfait n'existe pas, c'est pour cela qu'il faut améliorer et revenir en continue sur le travail déjà éffectué afin de l'améliorer, l'optimiser. C'est le but premeir de mon cms GTL.</p>
                 </div>
                 <div class="col-lg-8 col-lg-offset-2 text-center">
                     <a href="/public/PDF/cv.pdf" class="btn btn-lg btn-outline">
@@ -127,7 +127,8 @@
                     <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
                     <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
                     <form name="sentContact"  method="post" action="index.php">
-                        <div><?= $mailresult ?></div>
+                        <div>{{mailresult}}</div>
+						<input type="hidden" name="token" value="{{token}}" />
 						<div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <label>Nom/Prénom</label>
