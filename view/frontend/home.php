@@ -126,8 +126,9 @@
                 <div class="col-lg-8 col-lg-offset-2">
                     <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
                     <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
-                    <form name="sentContact"  method="post" action="" novalidate>
-                        <div class="row control-group">
+                    <form name="sentContact"  method="post" action="index.php">
+                        <div><?= $mailresult ?></div>
+						<div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <label>Nom/Prénom</label>
                                 <input type="text" name="name" class="form-control" placeholder="Nom Prénom" id="name" required data-validation-required-message="Veuillez saisir votre Nom/prénom.">
@@ -137,7 +138,7 @@
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <label>Adresse email</label>
-                                <input type="email" name="email" class="form-control" placeholder="Adresse email" id="email" required data-validation-required-message="Veuillez saisir votre adresse email.">
+                                <input type="text" name="email" class="form-control" placeholder="Adresse email" id="email" required pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" />
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>

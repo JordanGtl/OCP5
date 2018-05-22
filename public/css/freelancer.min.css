@@ -6,3 +6,4 @@
 .p-4 {padding:20px!important;}.header-img{padding-top:20px;}.text-dark{color:#575757;}
 .loginBlock{text-align:left;width:50%;height:40%;margin:0 auto;}.loginBlock > h3, .RegisterBlock > h3{margin-top:0px!important;margin-bottom: 0 !important;}.loginBlock > small, .RegisterBlock > small{margin-bottom:15px;display:block;}
 .RegisterBlock{text-align:left;width:50%;height:auto;margin:0 auto;}
+.Succes{color:green;}.Fail{color:red;}
