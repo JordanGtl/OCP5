@@ -16,15 +16,19 @@ catch(Exception $e)
 }
 
 # Controler
+include('controler/Parseur.class.php');
 include('controler/Frontend.class.php');
 
 # Initialisation des classes
-$front 			= new Frontend($db);
 
-# variables du site
-$title = 'Jordan GUILLOT - Développeur';
+$parseur = new Parseur();
+$front = new Frontend($db, $parseur);
+
+# variables du parseurs
+$parseur->classes = array('front' => $front);
+$parseur->vars = array('title' => 'Jordan GUILLOT - Développeur');
 
 # Template
-require('template.php');
+echo $parseur->ParseTemplate('template.html');
 ?>
 

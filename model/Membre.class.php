@@ -5,7 +5,7 @@ class Membres
 	
 	public function __construct(PDO $bdd)
 	{
-		$thiw->bdd = $bdd;
+		$this->bdd = $bdd;
 	}
 }
 ?>
