@@ -35,14 +35,12 @@ class Frontend
 			}
 			case 3: // Connexion
 			{
-				include($_SERVER['DOCUMENT_ROOT'].'model/Membre.class.php');
 				include($_SERVER['DOCUMENT_ROOT'].'controler/frontend/connexion.php');
 				return $this->parseur->ParsePage($_SERVER['DOCUMENT_ROOT'].'/view/frontend/connexion.html');
 				break;
 			}
 			case 4: // Inscription
-			{
-				include($_SERVER['DOCUMENT_ROOT'].'model/Membre.class.php');				
+			{				
 				include($_SERVER['DOCUMENT_ROOT'].'controler/frontend/inscription.php');
 				return $this->parseur->ParsePage($_SERVER['DOCUMENT_ROOT'].'/view/frontend/inscription.html');
 				break;
