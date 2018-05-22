@@ -503,3 +503,15 @@ fieldset[disabled] .btn-success.active {
   opacity: 0;
   display: none;
 }
+
+.bg-light{background:#fff;}
+
+
+.p-4 {
+  padding:20px!important;
+}
+
+.header-img
+{
+	padding-top:20px;
+}

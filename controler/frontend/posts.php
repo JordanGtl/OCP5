@@ -1,0 +1,4 @@
+<?php
+// Controler posts / Commentaires
+
+?>
