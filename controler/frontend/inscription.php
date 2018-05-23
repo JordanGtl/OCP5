@@ -1,13 +1,18 @@
 <?php
+$parseur->vars['retour_inscription'] = '';
+$parseur->vars['token'] = '';
+
 // Controler inscription
 if(isset($_POST['login']))
 {
-	$token = $_SESSION['token'];
+	$membre = new Membres($db);
+	$parseur->vars['retour_inscription'] = $membre->AjoutMembre()['message'];	
 }
 else
 {
 	# Protection CSRF
-	$token = md5(uniqid(rand(), TRUE));
-	$_SESSION['token'] = $token;
+	$_SESSION['token'] = md5(uniqid(rand(), TRUE));
 }
+
+$parseur->vars['token'] = $_SESSION['token'];
 ?>

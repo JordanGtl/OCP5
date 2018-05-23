@@ -4,12 +4,18 @@ class Frontend
 	private $db;
 	private $parseur;
 	
+	// ##############################################################################
+	// Constructeur de classe
+	// ##############################################################################
 	public function __construct($bdd, $parseur)
 	{
 		$this->bdd = $bdd;
 		$this->parseur = $parseur;
 	}
 
+	// ##############################################################################
+	// Fonction d'affichage de la page en fonction de l'url
+	// ##############################################################################
 	public function GetPage()
 	{
 		$db = $this->bdd;		

@@ -18,7 +18,7 @@ class Parseur
 	}
 	
 	// ##############################################################################
-	// Fonciton de parsage du template
+	// Fonction de parsage du template
 	// ##############################################################################
 	public function ParseTemplate($file)
 	{
@@ -29,7 +29,7 @@ class Parseur
 	}
 	
 	// ##############################################################################
-	// Fonciton de parsage d'une page
+	// Fonction de parsage d'une page
 	// ##############################################################################
 	public function ParsePage($file)
 	{
