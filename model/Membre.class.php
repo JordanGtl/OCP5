@@ -65,7 +65,7 @@ class Membres
 														
 														// Ajouter ici l'envoie du mail de validation
 														
-														return array('statut' => 1, 'message' => '');
+														return array('statut' => 1, 'message' => 'Inscription réussie, activer votre compte via l\'email que nous vous avons envoyé.');
 													}
 													else
 														return array('statut' => 0, 'message' => 'L\'email existe déjà dans la base de données');
@@ -102,14 +102,6 @@ class Membres
 		}
 		else
 			return array('statut' => 0, 'message' => 'Aucun captcha valide renseigné');
-	}
-	
-	// ##############################################################################
-	// Fonction d'identification d'un membre
-	// ##############################################################################
-	public function AuthMembre()
-	{
-		
 	}
 	
 	// ##############################################################################

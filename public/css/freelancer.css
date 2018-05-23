@@ -558,3 +558,14 @@ fieldset[disabled] .btn-success.active {
 {
 	color:red;
 }
+
+.None
+{
+	display:none;
+}
+
+.RegisterInfo
+{
+	text-align:center;
+	padding-bottom:10px;
+}

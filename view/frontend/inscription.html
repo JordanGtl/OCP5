@@ -10,7 +10,7 @@
                     <div class="p-4 bg-light text-dark RegisterBlock">
 						<h3>Création d'un compte</h3>
 						<small>Veuillez remplirs les champs ci-dessous afin de créer un compte sur le site.</small>
-						<div>{{retour_inscription}}</div>
+						<div class="RegisterInfo {{register_statut}}">{{register_message}}</div>
 						<form method="post" action="index.php?page=4">
 							<input type="hidden" name="token" value="{{token}}" />
 						  <div class="form-group">
