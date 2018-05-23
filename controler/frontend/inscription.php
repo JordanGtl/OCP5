@@ -1,5 +1,5 @@
 <?php
-$parseur->vars['retour_inscription'] 	= '';
+$parseur->vars['register_message'] 	= '';
 $parseur->vars['token'] 				= '';
 
 
