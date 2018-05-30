@@ -3,11 +3,20 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <img class="img-responsive" src="img/profile.png" alt="">
-                    <div class="intro-text">
+                     <div class="intro-text">
                         <span class="name">Page posts</span>
                         <hr class="star-light">
+                    </div>
+                </div>
+            </div>
+			
+			<div class="row">
+                <div class="col-lg-12" style="background:#fff;color:#575757;">
+                     <div class="intro-text">
+                       {{FOREACH:posts}}
+						<span class="name">{{Titre}}</span>
                         <span class="skills">Coming soon.</span>
+						{{/FOREACH}}
                     </div>
                 </div>
             </div>

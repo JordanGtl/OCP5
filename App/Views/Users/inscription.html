@@ -3,7 +3,6 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <img class="img-responsive" src="img/profile.png" alt="">
                 <div class="intro-text">
                     <span class="name">Inscription</span>
                     <hr class="star-light">
@@ -12,7 +11,7 @@
 						<small>Veuillez remplirs les champs ci-dessous afin de créer un compte sur le site.</small>
 						<div class="RegisterInfo {{register_statut}}">{{register_message}}</div>
 						<form method="post" action="index.php?page=4">
-							<input type="hidden" name="token" value="{{token}}" />
+							<input type="hidden" name="token" value="{{Core\Html\Form->generateToken()}}" />
 						  <div class="form-group">
 							<label for="exampleInputEmail1">Nom de compte</label>
 							<input type="text" name="login" class="form-control" placeholder="Nom de compte">
