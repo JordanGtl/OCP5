@@ -14,7 +14,5 @@ App::Load();
 
 # Chargement du template
 App::renderTemplate();
-
-
 ?>
 
