@@ -71,7 +71,7 @@ class Membres
 													if(!isset($emailsql[0]->Id))
 													{
 														$validationtoken = md5(uniqid(rand(), TRUE));
-														$mdpsql = password_hash('d5z8f5'.$login.':'.$mdp.'df57hf5', PASSWORD_DEFAULT);
+														$mdpsql = password_hash(PASSWORD_HASH_START.$login.':'.$mdp.PASSWORD_HASH_END, PASSWORD_DEFAULT);
 														
 														$reponse = $this->db->Insert('INSERT INTO Utilisateurs (NomDeCompte, MotDePasse, Nom, Prenom, Email, ValidationToken, Rang) VALUES (:login, :mdp, :nom, :prenom, :email, :validationtoken, 0)',
 														array('login' => $login, 'mdp' => $mdpsql, 'nom' => $nom, 'prenom' => $prenom, 'email' => $email, 'validationtoken' => $validationtoken));
@@ -147,7 +147,7 @@ class Membres
 		
 		if($token == $_SESSION['token'])
 		{
-			if(isset($user[0]) && password_verify('d5z8f5'.$login.':'.$mdp.'df57hf5', $user[0]->MotDePasse))
+			if(isset($user[0]) && password_verify(PASSWORD_HASH_START.$login.':'.$mdp.PASSWORD_HASH_END, $user[0]->MotDePasse))
 			{
 				if($user[0]->ValidationToken == '')
 				{
