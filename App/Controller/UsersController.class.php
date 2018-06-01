@@ -5,6 +5,8 @@ use Core\Controller\Controller;
 use App\Controller\AppController;
 use App\Model\Membres;
 
+use App\Entity\Utilisateur;
+
 class UsersController extends AppController
 {
 	private $membre;
@@ -16,6 +18,8 @@ class UsersController extends AppController
 	{
 		parent::__construct();
 		$this->membre =  Membres::getInstance();
+		
+		$user = new Utilisateur(12);
 	}
 	
 	// ##############################################################################

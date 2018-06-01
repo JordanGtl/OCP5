@@ -1,6 +1,8 @@
 <?php
 namespace App\Model;
+
 use \Mailjet\Resources;
+use \App\Entity\Utilisateur;
 
 class Membres
 {
@@ -62,13 +64,13 @@ class Membres
 										{
 											if(!empty($prenom))
 											{
-												$usersql = $this->db->query('SELECT Id FROM Utilisateurs WHERE NomDeCompte = ?', array($login));
-
-												if(!isset($usersql[0]->Id))
+												$user = new Utilisateur($login);
+												
+												if(!$user->Exist())
 												{
-													$emailsql = $this->db->query('SELECT Id FROM Utilisateurs WHERE Email = ?', array($email));
+													$usermail = new Utilisateur($email);
 
-													if(!isset($emailsql[0]->Id))
+													if(!$usermail->Exist())
 													{
 														$validationtoken = md5(uniqid(rand(), TRUE));
 														$mdpsql = password_hash(PASSWORD_HASH_START.$login.':'.$mdp.PASSWORD_HASH_END, PASSWORD_DEFAULT);

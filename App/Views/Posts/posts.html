@@ -12,12 +12,15 @@
 			
 			<div class="row">
                 <div class="col-lg-12" style="background:#fff;color:#575757;">
-                     <div class="intro-text">
-                       {{FOREACH:posts}}
-						<span class="name">{{Titre}}</span>
-                        <span class="skills">Coming soon.</span>
-						{{/FOREACH}}
-                    </div>
+                    {{FOREACH:posts}}
+					<div class="row">
+						<div class="col-4"></div>
+						<div class="col-8">
+							<span class="name">{{Titre}}</span>
+							<span class="skills">Coming soon.</span>
+						</div>
+					</div>
+					{{/FOREACH}}
                 </div>
             </div>
         </div>
