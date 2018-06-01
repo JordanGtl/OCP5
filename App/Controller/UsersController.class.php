@@ -18,8 +18,6 @@ class UsersController extends AppController
 	{
 		parent::__construct();
 		$this->membre =  Membres::getInstance();
-		
-		$user = new Utilisateur(12);
 	}
 	
 	// ##############################################################################
