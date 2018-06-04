@@ -39,5 +39,33 @@ class UsersController extends AppController
 		
 		$this->Render('Users/connexion.html', $args);
 	}
+	
+	// ##############################################################################
+	// Controller page de connexion
+	// ##############################################################################
+	public function ShowPasswordLost()
+	{		
+		if(!isset($_GET['token']))
+		{
+			$args = (count($_POST) > 0) ? $this->membre->PasswordLost() : [];
+			$this->Render('Users/mdplost.html', $args);
+		}
+		else
+		{
+			$user = new Utilisateur($_GET['token'], USER_MDPTOKEN);
+						
+			if(count($_POST) > 0)
+				$args = $this->membre->SetLostPassword();
+			else
+				$args = array();
+			
+			# Gere la condition if du parseur
+			$args['result'] = $user->Exist();
+			
+			$args['user'] = $user->getFullName();
+			
+			$this->Render('Users/mdpedit.html', $args);
+		}
+	}
 }
 ?>

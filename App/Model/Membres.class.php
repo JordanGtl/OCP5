@@ -64,11 +64,11 @@ class Membres
 										{
 											if(!empty($prenom))
 											{
-												$user = new Utilisateur($login);
+												$user = new Utilisateur($login, USER_LOGIN);
 												
 												if(!$user->Exist())
 												{
-													$usermail = new Utilisateur($email);
+													$usermail = new Utilisateur($email, USER_EMAIL);
 
 													if(!$usermail->Exist())
 													{
@@ -154,7 +154,7 @@ class Membres
 				if($user[0]->ValidationToken == '')
 				{
 					$_SESSION['login'] = $login;
-					return array('register_statut' => 'Success', 'register_message' => 'Connexion réussie, vous allez être redirigé');
+					return array('register_statut' => 'Succes', 'register_message' => 'Connexion réussie, vous allez être redirigé');
 				}
 				else
 					return array('register_statut' => 'Fail', 'register_message' => 'Ce compte n\'est pas encore activé, consulter votre boite email.');
@@ -167,6 +167,41 @@ class Membres
 	}
 	
 	// ##############################################################################
+	// Fonction mot de passe perdu
+	// ##############################################################################
+	public function PasswordLost() : array
+	{
+		$email = htmlentities($_POST['email']);
+		$token = htmlentities($_POST['token']);
+		
+		if($token == $_SESSION['token'])
+		{
+			if(!empty($email))
+			{
+				$user = new Utilisateur($email, USER_EMAIL);
+				
+				if($user->Exist())
+				{
+					$token = $user->setPasswordToken();
+					$this->SendLostPasswordMail($user->getEmail(), $user->getFullname(), $_SERVER['HTTP_HOST'].'/index.php?page=8&token='.$token);
+					
+					return array('statut' => 'Success', 'message' => 'L\'email de récupération à été envoyé');
+				}
+				else
+					return array('statut' => 'Fail', 'message' => 'L\'email n\'est associé à aucun compte');
+			}
+			else
+			{
+				return array('statut' => 'Fail', 'message' => 'Aucun email renseigné');
+			}	
+		}
+		else
+		{
+			return array('statut' => 'Fail', 'message' => 'Le token de vérification est incorrect');
+		}	
+	}
+	
+	// ##############################################################################
 	// Vérifie si le membre est connecté
 	// ##############################################################################
 	public static function IsLogged() : bool
@@ -174,6 +209,49 @@ class Membres
 		return (isset($_SESSION['login'])) ? true : false;
 	}
 	
+	// ##############################################################################
+	// Fonction d'envoie du mail du mot de passe oublié
+	// ##############################################################################
+	public function SendLostPasswordMail($email, $name, $link)
+	{
+		$api = new \Mailjet\Client(MAILJET_ID, MAILJET_SECRET, true,['version' => 'v3.1']);
+		$body = [
+			'Messages' => [
+				[
+					'From' => [
+						'Email' => "noreply@gtl-studio.com",
+						'Name' => "GTL Studio"
+					],
+					'To' => [
+						[
+							'Email' => $email,
+							'Name' => $name
+						]
+					],
+					'TemplateID' => 410322,
+					'TemplateLanguage' => true,
+					
+            'Variables' => [
+                'nomcompte' => $name,
+                'link' => $link
+            ],
+					"TemplateErrorDeliver" => true,
+					"TemplateErrorReporting" => [
+					"Email" => "thejordan01@gmail.com",
+					"Name" => "Air traffic control"
+					]
+				]
+			]
+			
+			
+		];
+		$response = $api->post(['send', ''/*, 'v3.1'*/], ['body' => $body]);
+		$response->success();
+	}
+	
+	// ##############################################################################
+	// Fonction d'envoie du mail d'inscription
+	// ##############################################################################
 	public function SendRegisterMail($email, $name, $link)
 	{
 		$api = new \Mailjet\Client(MAILJET_ID, MAILJET_SECRET, true,['version' => 'v3.1']);
@@ -209,6 +287,32 @@ class Membres
 		];
 		$response = $api->post(['send', ''/*, 'v3.1'*/], ['body' => $body]);
 		$response->success();
+	}
+	
+	// ##############################################################################
+	// Fonction de récupération du mot de passe perdu
+	// ##############################################################################
+	public function SetLostPassword()
+	{
+		$token 	= htmlentities($_GET['token'] ?? '');
+		$user 	= new Utilisateur($token, USER_MDPTOKEN);
+		$mdp 	= htmlentities($_POST['mdp']);
+		$mdpr 	= htmlentities($_POST['mdpr']);
+		
+		if($user->Exist())
+		{
+			if($mdp == $mdpr)
+			{
+				$user->setForcePassword($mdp);
+				return array('Statut' => 'Succes', 'Message' => 'Mot de passe modifié avec succès, vous pouvez vous connecter.');
+			}
+			else
+				return array('Statut' => 'Fail', 'Message' => 'Les deux mot de passes saisie ne sont pas identique.');
+		}
+		else
+		{
+			return array('Statut' => 'Fail', 'Message' => 'Aucun utilisateur associé à ce token.');
+		}		
 	}
 }
 ?>

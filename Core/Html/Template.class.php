@@ -150,7 +150,55 @@ class Template
 	}
 
 	// ##############################################################################
-	// Appel de la fonction callback si cette dernière existe
+	// Fonction de parsage d'une condition IF avec une variable
+	// ##############################################################################
+	protected function ParseConditionVarWithElse(string &$html, string $condition, string $if, string $else)
+	{
+		$pattern = '/({{IF:(.*)}})(.*)({{ELSE}})(.*)({{ENDIF}})/smU';
+		preg_match_all($pattern, $html, $matches, PREG_OFFSET_CAPTURE, 3);
+		$count = count($matches[2]);
+		
+		for($i = 0; $i < $count; ++$i)
+		{
+			if(count($matches) >= 7)
+			{
+				$retour 			= $this->vars[$condition];
+				$pattern 			= '{{IF:'.$condition.'}}'.$if.'{{ELSE}}'.$else.'{{ENDIF}}';
+				$html 				= str_replace($pattern, ($retour) ? $if : $else, $html);
+			}
+		}
+	}
+	
+
+	// ##############################################################################
+	// Fonciton de parsage d'une condition IF avec une fonction
+	// ##############################################################################
+	protected function ParseConditionFunctionWithElse(string &$html, string $condition, string $if, string $else)
+	{
+		$pattern = '/({{IF:(.*)}})(.*)({{ELSE}})(.*)({{ENDIF}})/smU';
+		preg_match_all($pattern, $html, $matches, PREG_OFFSET_CAPTURE, 3);
+		$count = count($matches[2]);
+		
+		for($i = 0; $i < $count; ++$i)
+		{
+			if(count($matches) >= 7)
+			{		
+				$conditioncut 	= explode('->', $condition);
+						
+				if(count($conditioncut) < 2)
+					throw new Exception('La syntaxe de la condition IF est incorrect');
+				
+			
+				$conditioncut[1] 	= str_replace('()', '', $conditioncut[1]);
+				$retour 			= $conditioncut[0]::{$conditioncut[1]}();
+				$pattern 			= '{{IF:'.$conditioncut[0].'->'.$conditioncut[1].'()}}'.$if.'{{ELSE}}'.$else.'{{ENDIF}}';
+				$html 				= str_replace($pattern, ($retour) ? $if : $else, $html);
+			}
+		}
+	}
+	
+	// ##############################################################################
+	// Fonction de parsage d'une condition IF (global)
 	// ##############################################################################
 	protected function ParseConditionWithElse(string &$html)
 	{
@@ -164,17 +212,16 @@ class Template
 			{
 				$condition 		= $matches[2][$i][0];
 				$if 			= $matches[3][$i][0];
-				$else 			= $matches[5][$i][0];				
-				$conditioncut 	= explode('->', $condition);
-						
-				if(count($conditioncut) < 2)
-					throw new Exception('La syntaxe de la condition IF est incorrect');
+				$else 			= $matches[5][$i][0];	
 				
-			
-				$conditioncut[1] 	= str_replace('()', '', $conditioncut[1]);
-				$retour 			= $conditioncut[0]::{$conditioncut[1]}();
-				$pattern 			= '{{IF:'.$conditioncut[0].'->'.$conditioncut[1].'()}}'.$if.'{{ELSE}}'.$else.'{{ENDIF}}';
-				$html 				= str_replace($pattern, ($retour) ? $if : $else, $html);
+				if(strpos('->', $matches[2][$i][0]) === false)
+				{
+					$this->ParseConditionVarWithElse($html, $condition, $if, $else);
+				}
+				else
+				{
+					$this->ParseConditionFunctionWithElse($html, $condition, $if, $else);
+				}
 			}
 		}
 	}

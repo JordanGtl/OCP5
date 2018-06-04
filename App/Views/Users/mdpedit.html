@@ -1,0 +1,41 @@
+<!-- Header -->
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="intro-text p-4">
+                    <span class="name">Utilisateur</span>
+                    <hr class="star-light">
+                    {{IF:result}}
+					<div style="" class="p-4 bg-light text-dark loginBlock">
+						<h3>Bonjour <b>{{user}}</b></h3>
+						<small>Veuillez saisir un nouveau mot de passe</small>
+						<div style="padding-bottom:10px" class="{{statut}}">{{Message}}</div>
+						<form method="post" action="">
+						  <input type="hidden" name="token" value="{{Core\Html\Form->generateToken()}}"/>
+						  <div class="form-group">
+							<label for="exampleInputEmail1">Mot de passe</label>
+							<input type="password" name="mdp" class="form-control" placeholder="Mot de passe">
+						  </div>
+						  <div class="form-group">
+							<label for="exampleInputEmail1">Répéter</label>
+							<input type="password" name="mdpr" class="form-control" placeholder="Saisir à nouveau">
+						  </div>
+						  <button type="submit" class="btn btn-primary">Récupérer mon compte</button>
+						</form>
+					</div>
+					{{ELSE}}
+					<div style="" class="p-4 bg-light text-dark loginBlock">
+						<h3>Bonjour <b>{{user}}</b></h3>
+						<small>Veuillez saisir un nouveau mot de passe</small>
+						<div class="Fail">Le token renseigné ne correspond à aucun compte.</div>
+					</div>
+					{{ENDIF}}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+   

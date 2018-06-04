@@ -81,6 +81,12 @@ class App
 				return $parseur->getPage('Admin/home.html');
 				break;
 			}
+			case 8: // Mot de passe perdu
+			{	
+				$controller = new \App\Controller\UsersController();
+				$controller->ShowPasswordLost();
+				break;
+			}
 			case 5: // Erreur 404
 			default:
 			{
