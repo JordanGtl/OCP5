@@ -67,5 +67,14 @@ class UsersController extends AppController
 			$this->Render('Users/mdpedit.html', $args);
 		}
 	}
+	
+	// ##############################################################################
+	// Controller de déconnexion
+	// ##############################################################################
+	public function Logout()
+	{
+		session_destroy();
+		header('location:index.php');
+	}
 }
 ?>

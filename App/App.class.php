@@ -87,6 +87,12 @@ class App
 				$controller->ShowPasswordLost();
 				break;
 			}
+			case 9: // Déconnexion
+			{	
+				$controller = new \App\Controller\UsersController();
+				$controller->Logout();
+				break;
+			}
 			case 5: // Erreur 404
 			default:
 			{
