@@ -74,6 +74,8 @@ class App
 			}
 			case 6: // Activation d'un compte
 			{
+				$controller = new \App\Controller\UsersController();
+				$controller->ActivateAccount();
 				break;
 			}
 			case 7: // Administration (requis droit admin)

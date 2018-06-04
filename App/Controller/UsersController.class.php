@@ -76,5 +76,15 @@ class UsersController extends AppController
 		session_destroy();
 		header('location:index.php');
 	}
+	
+	// ##############################################################################
+	//Controller d'activation d'un compte
+	// ##############################################################################
+	public function ActivateAccount()
+	{
+		$retour = (isset($_GET['token'])) ? $this->membre->ActiveAccount() : array('message' => 'Aucun token d\'activation n\'est renseigné');
+		
+		$this->Render('Users/activate.html', $retour);
+	}
 }
 ?>

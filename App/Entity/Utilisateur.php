@@ -7,6 +7,7 @@ define('USER_ID', 0);
 define('USER_LOGIN', 1);
 define('USER_EMAIL', 2);
 define('USER_MDPTOKEN', 3);
+define('USER_ACTIVATETOKEN', 4);
 
 class Utilisateur extends Entity
 {	
@@ -44,7 +45,25 @@ class Utilisateur extends Entity
 				$this->getByMdpToken($id);
 				break;
 			}
+			case USER_ACTIVATETOKEN:
+			{
+				$this->getByActivateToken($id);
+				break;
+			}
 		}			
+	}
+	
+	// ##############################################################################
+	// Récupération de données via le token d'activation
+	// ##############################################################################
+	private function getByActivateToken(string $token)
+	{		
+		$result = $this->db->query('SELECT '.$this->sqlfields.' FROM Utilisateurs WHERE ValidationToken = ?', array($token));
+		
+		if(is_array($result) && count($result) > 0)
+		{
+			$this->PushInfo($result);
+		}
 	}
 	
 	// ##############################################################################
@@ -105,6 +124,14 @@ class Utilisateur extends Entity
 	public function IsActive() : bool
 	{
 		return ($this->ValidationToken == '') ? true : false;
+	}
+	
+	// ##############################################################################
+	// Fonction qui active le compte
+	// ##############################################################################	
+	public function setActive()
+	{
+		$reponse = $this->db->Update('UPDATE Utilisateurs SET ValidationToken = "" WHERE Id = :id', array('id' => $this->Id));
 	}
 	
 	// ##############################################################################

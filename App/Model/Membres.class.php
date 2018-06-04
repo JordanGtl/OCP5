@@ -315,5 +315,20 @@ class Membres
 			return array('Statut' => 'Fail', 'Message' => 'Aucun utilisateur associé à ce token.');
 		}		
 	}
+	
+	public function ActiveAccount() : array
+	{
+		$user = new Utilisateur($_GET['token'] ?? '', USER_ACTIVATETOKEN);
+		
+		if($user->Exist())
+		{
+			$user->setActive();
+			return array('statut' => 'Succes', 'message' => 'L\'activation du compte est terminé, vous pouvez vous connecter dès maintenant');
+		}
+		else
+		{
+			return array('statut' => 'Fail', 'message' => 'Le token renseigné n\'est associé à aucun compte.');
+		}		
+	}
 }
 ?>
