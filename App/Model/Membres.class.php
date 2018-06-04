@@ -154,6 +154,7 @@ class Membres
 				if($user[0]->ValidationToken == '')
 				{
 					$_SESSION['login'] = $login;
+					header('location:index.php');
 					return array('register_statut' => 'Succes', 'register_message' => 'Connexion réussie, vous allez être redirigé');
 				}
 				else

@@ -214,7 +214,7 @@ class Template
 				$if 			= $matches[3][$i][0];
 				$else 			= $matches[5][$i][0];	
 				
-				if(strpos('->', $matches[2][$i][0]) === false)
+				if(strpos($matches[2][$i][0], '->') === false)
 				{
 					$this->ParseConditionVarWithElse($html, $condition, $if, $else);
 				}
