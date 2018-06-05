@@ -147,7 +147,7 @@ class Membres
 		$mdp 	= htmlentities($_POST['mdp']);
 		$token 	= htmlentities($_POST['token']);
 
-		$user = $this->db->query('SELECT Id, MotDePasse, ValidationToken FROM Utilisateurs WHERE NomDeCompte = ?', array($login));
+		$user = $this->db->query('SELECT Id, MotDePasse, ValidationToken, Nom, Prenom FROM Utilisateurs WHERE NomDeCompte = ?', array($login));
 		
 		if($token == $_SESSION['token'])
 		{
@@ -156,6 +156,9 @@ class Membres
 				if($user[0]->ValidationToken == '')
 				{
 					$_SESSION['login'] = $login;
+					$_SESSION['id'] = $user[0]->Id;
+					$_SESSION['nom'] = $user[0]->Nom;
+					$_SESSION['prenom'] = $user[0]->Prenom;
 					header('location:index.php');
 					return array('register_statut' => 'Succes', 'register_message' => 'Connexion réussie, vous allez être redirigé');
 				}

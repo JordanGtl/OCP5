@@ -61,7 +61,7 @@ class Post extends Entity
 	// ##############################################################################
 	public function getCommentNbr() : int
 	{
-		return $this->CommentNbr ?? 0;
+		return $this->NbrComment ?? 0;
 	}
 	
 	// ##############################################################################

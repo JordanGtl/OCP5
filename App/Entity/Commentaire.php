@@ -8,19 +8,11 @@ class Commentaire extends Entity
 	// ##############################################################################
 	// Constructeur de classe
 	// ##############################################################################
-	public function __construct($id)
+	public function __construct($result)
 	{
 		parent::__construct();
 		
-		$result = $this->db->query('SELECT PostsCommentaire.Id, PostsCommentaire.IdPost, Utilisateurs.Nom, Utilisateurs.Prenom, PostsCommentaire.Date, PostsCommentaire.Contenu, PostsCommentaire.Statut 
-		FROM PostsCommentaire 
-		INNER JOIN Utilisateurs ON Utilisateurs.Id = PostsCommentaire.Auteur
-		WHERE PostsCommentaire.Id = ?', array($id));
-		
-		if(is_array($result) && count($result) > 0)
-		{
-			$this->PushInfo($result);
-		}
+		$this->Hydrate($result);
 	}
 	
 	// ##############################################################################
@@ -36,7 +28,8 @@ class Commentaire extends Entity
 	// ##############################################################################
 	public function getFormatedDate() : string
 	{
-		return date('d/m/Y H:i', strtotime($this->Date));
+		$time = strtotime($this->Date);
+		return date('d/m/Y', $time).' &agrave; '.date('H:i', $time);
 	}
 	
 	// ##############################################################################
@@ -44,7 +37,7 @@ class Commentaire extends Entity
 	// ##############################################################################
 	public function getAuteur() : string
 	{
-		return $this->Nom .' '. $this->Prenom; 
+		return $this->Auteur ?? 'Inconnu'; 
 	}
 	
 	// ##############################################################################
@@ -52,7 +45,7 @@ class Commentaire extends Entity
 	// ##############################################################################
 	public function getParentPost() : string
 	{
-		return this->IdPost;
+		return $this->IdPost;
 	}
 	
 	// ##############################################################################

@@ -251,7 +251,8 @@ class Template
 			{
 				$class 		= $matches[1][$i][0];
 				$function 	= $matches[2][$i][0];							
-				$retour 	= $class::getInstance()->$function();				
+				$retour 	= (!class_exists($class)) ?  $this->vars[$class]->$function() : $class::getInstance()->$function();	
+				
 				$html 		= str_replace('{{'.$class.'->'.$function.'()}}', $retour, $html);
 			}
 		}

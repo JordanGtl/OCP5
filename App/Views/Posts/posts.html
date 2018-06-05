@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col-lg-12">
                      <div class="intro-text">
-                        <span class="name">Page posts</span>
+                        <span class="name">Posts</span>
                         <hr class="star-light">
                     </div>
                 </div>
@@ -12,22 +12,54 @@
 			
 			<div class="row">
                 <div class="col-lg-12 PostSection">
-                    {{FOREACH:posts}}
-					<div class="row RowPost">
-						<div class="col-lg-3"><img src="{{getPicture()}}"></div>
+					<div class="row RowPost" style="border:none;">
+						<div class="col-lg-3"><img src="{{posts->getPicture()}}"></div>
 						<div class="col-lg-9 text-left">
 							<div class="PostTitleSection">
-								<h3>{{getTitle()}}</h3>
-								<div>{{getCommentNbr()}} <i class="fa fa-comment"></i></div>
+								<h3>{{posts->getTitle()}}</h3>
+								<div>{{posts->getCommentNbr()}} <i class="fa fa-comment"></i></div>
 							</div>
-							<span class="skills">{{getChapo()}}</span>
-							<br /><br />
-							<a href="index.php?page=1&id={{getId()}}">Lire plus</a>
+							<span class="skills">{{posts->getContenu()}}</span>
 						</div>
 					</div>
-					{{/FOREACH}}
                 </div>
             </div>
+			
+			 <div class="row">
+                <div class="col-lg-12" style="margin-top:10px;">
+                     <div class="intro-text">
+                        <span class="subname">Commentaire(s)</span>
+                    </div>
+                </div>
+            </div>
+			
+			{{IF:App\Model\Membres->IsLogged()}}
+			<div class="row PostComment">
+				<div class="col-lg-12 text-left">
+					<div class="CommentHead">Saisir votre commentaire ci-dessous</div>
+					<div class="CommentContent" style="padding-top:10px;">
+						<form method="post" action="">
+						<textarea name="com" style="width:100%;min-height:100px;"></textarea>
+						<input type="submit" class="btn btn-primary" value="Poster" />
+					</div>
+				</div>
+            </div>
+			{{ELSE}}
+			<div class="row PostComment">
+				<div class="col-lg-12 text-center">
+					<div class="CommentHead Fail">Vous devez être connecté pour poster un commentaire</div>
+				</div>
+            </div>
+			{{ENDIF}}
+			
+			{{FOREACH:comments}}
+			<div class="row PostComment">
+				<div class="col-lg-12 text-left">
+					<div class="CommentHead"><b>{{getAuteur()}}</b>, <i>le {{getFormatedDate()}}</i></div>
+					<div class="CommentContent" style="padding-top:10px;">{{getContenu()}}</div>
+				</div>
+            </div>
+			{{/FOREACH}}
         </div>
     </header>
 

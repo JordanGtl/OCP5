@@ -4,16 +4,19 @@ namespace App\Controller;
 use Core\Controller\Controller;
 use App\Controller\AppController;
 use App\Model\Posts;
+use App\Model\Comments;
 use StdClass;
 
 class PostController extends AppController
 {	
 	private $model;
+	private $modelcom;
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->model = new Posts();
+		$this->modelcom = new Comments();
 	}
 
 	// ##############################################################################
@@ -48,7 +51,7 @@ class PostController extends AppController
 	// ##############################################################################
 	public function ShowPostsList()
 	{			
-		$this->Render('Posts/posts.html', array('posts' => $this->model->getLastPost()));
+		$this->Render('Posts/postsliste.html', array('posts' => $this->model->getLastPost()));
 	}
 	
 	// ##############################################################################
@@ -56,8 +59,12 @@ class PostController extends AppController
 	// ##############################################################################
 	public function ShowPost()
 	{
-		$id = intval($_GET['id']);
+		$id 		= intval($_GET['id']);
+		$username 	= (isset($_SESSION['nom']) && isset($_SESSION['prenom'])) ? $_SESSION['nom'].' '.$_SESSION['prenom'] : '';
 		
-		$this->Render('Posts/posts.html', array('posts' => $this->model->GetPostById($id)));
+		if(count($_POST) > 0)
+			$this->modelcom->Add();
+		
+		$this->Render('Posts/posts.html', array('posts' => $this->model->GetPostById($id), 'comments' => $this->modelcom->getCommentListByPostId($id), 'username' => $username));
 	}
 }

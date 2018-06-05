@@ -33,9 +33,12 @@ class Posts
 	// ##############################################################################
 	// Récupère les dernier posts
 	// ##############################################################################
-	public function getLastPost()
+	public function getLastPost() : array
 	{
-		$req 	= $this->db->query('SELECT Id, Titre, Picture, Chapo, Auteur FROM BlogPosts LIMIT 0,6');
+		$req 	= $this->db->query('SELECT BlogPosts.Id, BlogPosts.Titre, BlogPosts.Picture, BlogPosts.Chapo, BlogPosts.Auteur, 
+		(SELECT COUNT(PostsCommentaire.Id) FROM PostsCommentaire WHERE PostsCommentaire.IdPost = BlogPosts.Id) AS NbrComment 
+		FROM BlogPosts  
+		LIMIT 0,6');
 		$return = array();
 		
 		foreach($req as $data)
@@ -50,10 +53,12 @@ class Posts
 	// ##############################################################################
 	// Récupère un post via son id
 	// ##############################################################################
-	public function GetPostById($id)
+	public function GetPostById($id) : Post
 	{
-		$datas 	= $this->db->query('SELECT * FROM BlogPosts WHERE Id = :id', array(':id' => $id));
+		$datas 	= $this->db->query('SELECT Titre, Id, Picture, Chapo, Auteur, Contenu, 
+		(SELECT COUNT(PostsCommentaire.Id) FROM PostsCommentaire WHERE PostsCommentaire.IdPost = BlogPosts.Id) AS NbrComment  FROM BlogPosts WHERE Id = :id', array(':id' => $id));
+		$post = new Post($datas);
 		
-		return $datas;
+		return $post;
 	}
 }
