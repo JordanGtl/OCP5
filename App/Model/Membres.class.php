@@ -64,11 +64,13 @@ class Membres
 										{
 											if(!empty($prenom))
 											{
-												$user = new Utilisateur($login, USER_LOGIN);
+												$user = $this->db->query('SELECT Id FROM Utilisateurs WHERE NomDeCompte = ?', array($login));
+												$user = new Utilisateur($user);
 												
 												if(!$user->Exist())
 												{
-													$usermail = new Utilisateur($email, USER_EMAIL);
+													$usermail = $this->db->query('SELECT Id FROM Utilisateurs WHERE Email = ?', array($email));
+													$usermail = new Utilisateur($usermail);
 
 													if(!$usermail->Exist())
 													{
@@ -168,6 +170,18 @@ class Membres
 	}
 	
 	// ##############################################################################
+	// Fonction qui verifie l'association d'un token mot de passe à un compte
+	// ##############################################################################
+	public function VerifPasswordToken(string $token) : Utilisateur
+	{
+		$sql = $this->db->query('SELECT Id, Nom, Prenom FROM Utilisateurs WHERE PasswordToken = ?', array($token));
+		
+		$user = new Utilisateur($sql);
+		
+		return $user;
+	}
+	
+	// ##############################################################################
 	// Fonction mot de passe perdu
 	// ##############################################################################
 	public function PasswordLost() : array
@@ -179,7 +193,8 @@ class Membres
 		{
 			if(!empty($email))
 			{
-				$user = new Utilisateur($email, USER_EMAIL);
+				$sql = $this->db->query('SELECT Id FROM Utilisateurs WHERE Email = ?', array($email));
+				$user = new Utilisateur($sql);
 				
 				if($user->Exist())
 				{
@@ -296,15 +311,18 @@ class Membres
 	public function SetLostPassword()
 	{
 		$token 	= htmlentities($_GET['token'] ?? '');
-		$user 	= new Utilisateur($token, USER_MDPTOKEN);
 		$mdp 	= htmlentities($_POST['mdp']);
 		$mdpr 	= htmlentities($_POST['mdpr']);
+		
+		$sql 	= $this->db->query('SELECT Id, NomDeCompte, MotDePasse FROM Utilisateurs WHERE PasswordToken = ?', array($token));
+		$user 	= new Utilisateur($sql);
 		
 		if($user->Exist())
 		{
 			if($mdp == $mdpr)
 			{
-				$user->setForcePassword($mdp);
+				$user->setPassword($mdp);
+				$reponse = $this->db->Update('UPDATE Utilisateurs SET MotDePasse = :mdp, PasswordToken = "" WHERE Id = :id', array('id' => $user->getId(), 'mdp' => $user->getPasswordHash()));
 				return array('Statut' => 'Succes', 'Message' => 'Mot de passe modifié avec succès, vous pouvez vous connecter.');
 			}
 			else
@@ -314,15 +332,21 @@ class Membres
 		{
 			return array('Statut' => 'Fail', 'Message' => 'Aucun utilisateur associé à ce token.');
 		}		
+		
 	}
 	
+	// ##############################################################################
+	// Fonction d'activation d'un compte
+	// ##############################################################################
 	public function ActiveAccount() : array
 	{
-		$user = new Utilisateur($_GET['token'] ?? '', USER_ACTIVATETOKEN);
+		$sql 	= $this->db->query('SELECT Id, NomDeCompte FROM Utilisateurs WHERE ValidationToken = ?', array($_GET['token']));
+		$user = new Utilisateur($sql);
 		
 		if($user->Exist())
 		{
 			$user->setActive();
+			$this->db->Update('UPDATE Utilisateurs SET ValidationToken = "" WHERE Id = :id', array('id' => $user->getId()));
 			return array('statut' => 'Succes', 'message' => 'L\'activation du compte est terminé, vous pouvez vous connecter dès maintenant');
 		}
 		else

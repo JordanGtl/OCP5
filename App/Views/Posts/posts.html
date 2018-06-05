@@ -11,15 +11,18 @@
             </div>
 			
 			<div class="row">
-                <div class="col-lg-12" style="background:#fff;color:#575757;padding-top:20px;">
+                <div class="col-lg-12 PostSection">
                     {{FOREACH:posts}}
-					<div class="row" style="border-bottom:solid 1px #ccc;padding-top:15px;padding-bottom:0px;">
-						<div class="col-lg-3"><img src="{{Picture}}" style="width:100%;"></div>
+					<div class="row RowPost">
+						<div class="col-lg-3"><img src="{{getPicture()}}"></div>
 						<div class="col-lg-9 text-left">
-							<h3 style="margin-top:0;">{{Titre}}</h3>
-							<span class="skills">{{Chapo}}</span>
+							<div class="PostTitleSection">
+								<h3>{{getTitle()}}</h3>
+								<div>{{getCommentNbr()}} <i class="fa fa-comment"></i></div>
+							</div>
+							<span class="skills">{{getChapo()}}</span>
 							<br /><br />
-							<a href="index.php?page=1&id={{Id}}">Lire plus</a>
+							<a href="index.php?page=1&id={{getId()}}">Lire plus</a>
 						</div>
 					</div>
 					{{/FOREACH}}

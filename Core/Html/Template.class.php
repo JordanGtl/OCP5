@@ -105,7 +105,7 @@ class Template
 		$pattern = '/{{(.*)}}/U';
 		preg_match_all($pattern, $result[2][$index], $resultsub);
 		
-		$boucle = $this->vars[$result[1][$index]];
+		$boucle = $this->vars[$result[1][$index]];		
 		$retour = '';
 		
 		foreach($boucle as $data)
@@ -115,13 +115,23 @@ class Template
 			preg_match_all($pattern, $datas, $resultsub);
 			
 			$prov = $datas;
-			
+
 			foreach($resultsub[1] as $regex)
 			{
-				$prov = str_replace('{{'.$regex.'}}', utf8_encode($data->{$regex}), $prov);
+				if(strpos($regex, '()') === false)
+				{
+					$prov = str_replace('{{'.$regex.'}}', utf8_encode($data->{$regex}), $prov);
+				}
+				else
+				{
+					$regex = str_replace('()', '', $regex);
+					$prov = str_replace('{{'.$regex.'()}}', utf8_encode($data->{$regex}()), $prov);
+				}
 			}
 			
 			$retour .= $prov;
+			
+			
 		}
 	
 		$html = preg_replace('/{{FOREACH:'.addslashes($result[1][$index]).'}}(.*){{\/FOREACH}}/mUs', $retour, $html);

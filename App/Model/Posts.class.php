@@ -1,6 +1,9 @@
 <?php
 namespace App\Model;
 
+
+use App\Entity\Post;
+
 class Posts
 {
 	private static $_instance;
@@ -32,9 +35,16 @@ class Posts
 	// ##############################################################################
 	public function getLastPost()
 	{
-		$req 	= $this->db->query('SELECT * FROM BlogPosts LIMIT 0,6');
-
-		return $req;
+		$req 	= $this->db->query('SELECT Id, Titre, Picture, Chapo, Auteur FROM BlogPosts LIMIT 0,6');
+		$return = array();
+		
+		foreach($req as $data)
+		{		
+			$post = new Post((array)$data);
+			$return[] = $post;
+		}
+		
+		return $return;
 	}
 	
 	// ##############################################################################

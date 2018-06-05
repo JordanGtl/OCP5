@@ -6,3 +6,9 @@
 .p-4 {padding:20px!important;}.header-img{padding-top:20px;}.text-dark{color:#575757;}.loginBlock{text-align:left;width:50%;height:40%;margin:0 auto;}.loginBlock > h3, .RegisterBlock > h3{margin-top:0px!important;margin-bottom: 0 !important;}.loginBlock > small, .RegisterBlock > small{margin-bottom:15px;display:block;}.RegisterBlock{text-align:left;width:50%;height:auto;margin:0 auto;}.Succes{color:green;}.Fail{color:red;}.None{display:none;}.RegisterInfo{text-align:center;padding-bottom:10px;border-bottom: solid 1px #ccc;margin-bottom: 10px;}
 .login-help{margin-top:10px;}
 .Succes{color:green;}
+.PostSection{background:#fff;color:#575757;padding-top:20px;}
+.RowPost{border-bottom:solid 1px #ccc;padding-top:15px;padding-bottom:0px;}
+.RowPost > .col-lg-3 > img{width:100%;}
+.PostTitleSection{display:flex;}
+.PostTitleSection > h3{margin-top:0;display:block;flex:1;}
+.PostTitleSection > i{font-size:20px;}

@@ -4,6 +4,7 @@ namespace App\Controller;
 use Core\Controller\Controller;
 use App\Controller\AppController;
 use App\Model\Membres;
+use \App\Model\Database;
 
 use App\Entity\Utilisateur;
 
@@ -25,6 +26,12 @@ class UsersController extends AppController
 	// ##############################################################################
 	public function ShowRegister()
 	{
+		$this->db = Database::getInstance();
+		
+		// $user = $this->db->query('SELECT Id FROM Utilisateurs WHERE Id = ?', array(12));
+		// $user = new Utilisateur($user);
+		// var_dump($user->Exist());
+		
 		$args = (count($_POST) > 0) ? $this->membre->AjoutMembre() : [];
 		
 		$this->Render('Users/inscription.html', $args);
@@ -52,7 +59,7 @@ class UsersController extends AppController
 		}
 		else
 		{
-			$user = new Utilisateur($_GET['token'], USER_MDPTOKEN);
+			$user = $this->membre->VerifPasswordToken($_GET['token']);
 						
 			if(count($_POST) > 0)
 				$args = $this->membre->SetLostPassword();

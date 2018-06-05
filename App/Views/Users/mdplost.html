@@ -9,8 +9,8 @@
                     <div style="" class="p-4 bg-light text-dark loginBlock">
 						<h3>Mot de passe oublié</h3>
 						<small>Veuillez saisir votrez email pour récupérer votre compte</small>
-						<div class="{{register_statut}}">{{register_message}}</div>
-						<form method="post" action="index.php?page=3">
+						<div class="{{statut}}">{{message}}</div>
+						<form method="post" action="index.php?page=8">
 						  <input type="hidden" name="token" value="{{Core\Html\Form->generateToken()}}"/>
 						  <div class="form-group">
 							<label for="exampleInputEmail1">Adresse email</label>

@@ -4,7 +4,6 @@ namespace App\Controller;
 use Core\Controller\Controller;
 use App\Controller\AppController;
 use App\Model\Posts;
-use App\Entity\Post;
 use StdClass;
 
 class PostController extends AppController
@@ -48,9 +47,7 @@ class PostController extends AppController
 	// Controller de la page posts (listes)
 	// ##############################################################################
 	public function ShowPostsList()
-	{		
-		$post = new post(1);
-	
+	{			
 		$this->Render('Posts/posts.html', array('posts' => $this->model->getLastPost()));
 	}
 	

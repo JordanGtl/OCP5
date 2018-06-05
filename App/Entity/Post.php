@@ -9,56 +9,67 @@ class Post extends Entity
 	// ##############################################################################
 	// Constructeur de classe
 	// ##############################################################################
-	public function __construct($id)
+	public function __construct($result)
 	{
 		parent::__construct();
 		
-		$result = $this->db->query('SELECT Titre, Contenu, Chapo, Picture, DerniereModification AS Date FROM BlogPosts');
-		
-		if(is_array($result) && count($result) > 0)
-		{
-			$this->PushInfo($result);
-		}
+		$this->Hydrate($result);
+	}
+	
+	// ##############################################################################
+	// Fonction qui retourne l'id
+	// ##############################################################################
+	public function getId() : int
+	{
+		return $this->Id ?? 0;
 	}
 	
 	// ##############################################################################
 	// Fonction qui retourne le titre
 	// ##############################################################################
-	public function getTitle()
+	public function getTitle() : string
 	{
-		return $this->Titre;
+		return $this->Titre ?? '';
 	}
 	
 	// ##############################################################################
 	// Fonction qui retourne le contenu
 	// ##############################################################################
-	public function getContenu()
+	public function getContenu() : string
 	{
-		return $this->Contenu;
+		return $this->Contenu ?? '';
 	}
 	
 	// ##############################################################################
 	// Fonction qui retourne le chapo
 	// ##############################################################################
-	public function getChapo()
+	public function getChapo() : string
 	{
-		return $this->Chapo;
+		return $this->Chapo ?? '';
 	}
 	
 	// ##############################################################################
 	// Fonction qui retourne l'image
 	// ##############################################################################
-	public function getPicture()
+	public function getPicture() : string
 	{
-		return $this->Picture;
+		return $this->Picture ?? '';
+	}
+	
+	// ##############################################################################
+	// Fonction qui retourne le nombre de commentaire
+	// ##############################################################################
+	public function getCommentNbr() : int
+	{
+		return $this->CommentNbr ?? 0;
 	}
 	
 	// ##############################################################################
 	// Fonction qui retourne la date formatée
 	// ##############################################################################
-	public function getFormatedDate()
+	public function getFormatedDate() : string
 	{
-		return date('d/m/Y H:i', strtotime($this->Date));
+		return (isset($this->Date)) ? date('d/m/Y H:i', strtotime($this->Date)) : '';
 	}
 	
 }

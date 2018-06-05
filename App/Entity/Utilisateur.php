@@ -17,11 +17,15 @@ class Utilisateur extends Entity
 	// Constructeur de classe
 	// Crée les variable de classe en fonction des champs de la table
 	// ##############################################################################
-	public function __construct($id, $type = USER_ID)
+	public function __construct($result)
 	{
 		parent::__construct();
 		
-		$this->sqlfields = 'Id, NomDeCompte, Email, MotDePasse, Nom, Prenom, ValidationToken';
+		$this->Hydrate($result);
+		
+		//////////////////////////////////////////////////
+		
+		/*$this->sqlfields = 'Id, NomDeCompte, Email, MotDePasse, Nom, Prenom, ValidationToken';
 		
 		switch($type)
 		{
@@ -50,72 +54,7 @@ class Utilisateur extends Entity
 				$this->getByActivateToken($id);
 				break;
 			}
-		}			
-	}
-	
-	// ##############################################################################
-	// Récupération de données via le token d'activation
-	// ##############################################################################
-	private function getByActivateToken(string $token)
-	{		
-		$result = $this->db->query('SELECT '.$this->sqlfields.' FROM Utilisateurs WHERE ValidationToken = ?', array($token));
-		
-		if(is_array($result) && count($result) > 0)
-		{
-			$this->PushInfo($result);
-		}
-	}
-	
-	// ##############################################################################
-	// Récupération de données via le token mot de passe
-	// ##############################################################################
-	private function getByMdpToken(string $token)
-	{		
-		$result = $this->db->query('SELECT '.$this->sqlfields.' FROM Utilisateurs WHERE PasswordToken = ?', array($token));
-		
-		if(is_array($result) && count($result) > 0)
-		{
-			$this->PushInfo($result);
-		}
-	}
-	
-	// ##############################################################################
-	// Récupération de données via l'email
-	// ##############################################################################
-	private function getByEmail(string $email)
-	{		
-		$result = $this->db->query('SELECT '.$this->sqlfields.' FROM Utilisateurs WHERE Email = ?', array($email));
-		
-		if(is_array($result) && count($result) > 0)
-		{
-			$this->PushInfo($result);
-		}
-	}
-	
-	// ##############################################################################
-	// Récupération de données via l'id
-	// ##############################################################################
-	private function getById(int $id)
-	{		
-		$result = $this->db->query('SELECT '.$this->sqlfields.' FROM Utilisateurs WHERE Id = ?', array($id));
-		
-		if(is_array($result) && count($result) > 0)
-		{
-			$this->PushInfo($result);
-		}
-	}
-	
-	// ##############################################################################
-	// Récupération de données via le nom de compte
-	// ##############################################################################
-	private function getByLogin(string $login)
-	{
-		$result = $this->db->query('SELECT '.$this->sqlfields.' FROM Utilisateurs WHERE NomDeCompte = ?', array($login));
-		
-		if(is_array($result) && count($result) > 0)
-		{
-			$this->PushInfo($result);
-		}
+		}	*/		
 	}
 	
 	// ##############################################################################
@@ -123,7 +62,7 @@ class Utilisateur extends Entity
 	// ##############################################################################	
 	public function IsActive() : bool
 	{
-		return ($this->ValidationToken == '') ? true : false;
+		return (isset($this->ValidationToken) && $this->ValidationToken == '') ? true : false;
 	}
 	
 	// ##############################################################################
@@ -131,7 +70,15 @@ class Utilisateur extends Entity
 	// ##############################################################################	
 	public function setActive()
 	{
-		$reponse = $this->db->Update('UPDATE Utilisateurs SET ValidationToken = "" WHERE Id = :id', array('id' => $this->Id));
+		$this->ValidationToken = '';
+	}
+	
+	// ##############################################################################
+	// Fonction qui retourne l'email
+	// ##############################################################################
+	public function getId() : int
+	{
+		return $this->Id ?? 0;
 	}
 	
 	// ##############################################################################
@@ -139,7 +86,7 @@ class Utilisateur extends Entity
 	// ##############################################################################
 	public function getEmail() : string
 	{
-		return $this->Email;
+		return $this->Email ?? '';
 	}
 	
 	// ##############################################################################
@@ -153,9 +100,9 @@ class Utilisateur extends Entity
 	// ##############################################################################
 	// Fonction de vérification ud mot de passe
 	// ##############################################################################
-	public function VerifyPassword($mdp)
+	public function getPasswordHash()
 	{
-		
+		return $this->MotDePasse ?? '';
 	}
 	
 	// ##############################################################################
@@ -173,10 +120,19 @@ class Utilisateur extends Entity
 	// ##############################################################################
 	// Fonction d'edition du mot de passe (sans ancien mdp)
 	// ##############################################################################
-	public function setForcePassword($newpassword)
+	public function setPassword($newpassword)
 	{
-		$mdpsql = password_hash(PASSWORD_HASH_START.$this->NomDeCompte.':'.$newpassword.PASSWORD_HASH_END, PASSWORD_DEFAULT);
-		$reponse = $this->db->Update('UPDATE Utilisateurs SET MotDePasse = :mdp, PasswordToken = "" WHERE Id = :id', array('id' => $this->Id, 'mdp' => $mdpsql));
+		if(isset($this->MotDePasse))
+		{
+			if(isset($this->NomDeCompte))
+			{
+				$this->MotDePasse = password_hash(PASSWORD_HASH_START.$this->NomDeCompte.':'.$newpassword.PASSWORD_HASH_END, PASSWORD_DEFAULT);
+			}
+			else
+				throw new Exception('Aucun objet nom de compte n\'existe pour l\'entité "Utilisateur"');
+		}
+		else
+			 throw new Exception('Aucun objet mot de passe n\'existe pour l\'entité "Utilisateur"');
 	}
 }
 ?>

@@ -19,10 +19,17 @@ class Entity
 	// ##############################################################################
 	// Création des variable de classes avec le résultat de la requete sql
 	// ##############################################################################
-	protected function PushInfo(array $result)
-	{
-		$result = $result[0];
-		$result = (array) $result;
+	protected function Hydrate(array $result)
+	{		
+		if(isset($result[0]) && is_array($result[0]))
+		{
+			$result = $result[0];
+			$result = (array) $result;	
+		}
+		elseif(is_object($result))
+		{
+			$result = (array)$result;
+		}
 		
 		foreach($result as $key => $data)
 		{
