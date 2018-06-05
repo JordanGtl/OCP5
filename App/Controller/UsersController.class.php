@@ -28,10 +28,6 @@ class UsersController extends AppController
 	{
 		$this->db = Database::getInstance();
 		
-		// $user = $this->db->query('SELECT Id FROM Utilisateurs WHERE Id = ?', array(12));
-		// $user = new Utilisateur($user);
-		// var_dump($user->Exist());
-		
 		$args = (count($_POST) > 0) ? $this->membre->AjoutMembre() : [];
 		
 		$this->Render('Users/inscription.html', $args);
