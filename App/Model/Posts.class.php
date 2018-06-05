@@ -36,7 +36,7 @@ class Posts
 	public function getLastPost() : array
 	{
 		$req 	= $this->db->query('SELECT BlogPosts.Id, BlogPosts.Titre, BlogPosts.Picture, BlogPosts.Chapo, BlogPosts.Auteur, 
-		(SELECT COUNT(PostsCommentaire.Id) FROM PostsCommentaire WHERE PostsCommentaire.IdPost = BlogPosts.Id) AS NbrComment 
+		(SELECT COUNT(PostsCommentaire.Id) FROM PostsCommentaire WHERE PostsCommentaire.IdPost = BlogPosts.Id AND PostsCommentaire.Statut = 1) AS NbrComment 
 		FROM BlogPosts  
 		LIMIT 0,6');
 		$return = array();
@@ -56,7 +56,7 @@ class Posts
 	public function GetPostById($id) : Post
 	{
 		$datas 	= $this->db->query('SELECT Titre, Id, Picture, Chapo, Auteur, Contenu, 
-		(SELECT COUNT(PostsCommentaire.Id) FROM PostsCommentaire WHERE PostsCommentaire.IdPost = BlogPosts.Id) AS NbrComment  FROM BlogPosts WHERE Id = :id', array(':id' => $id));
+		(SELECT COUNT(PostsCommentaire.Id) FROM PostsCommentaire WHERE PostsCommentaire.IdPost = BlogPosts.Id AND PostsCommentaire.Statut = 1) AS NbrComment FROM BlogPosts WHERE Id = :id', array(':id' => $id));
 		$post = new Post($datas);
 		
 		return $post;
