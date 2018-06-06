@@ -36,12 +36,17 @@
 			{{IF:App\Model\Membres->IsLogged()}}
 			<div class="row PostComment">
 				<div class="col-lg-12 text-left">
+					{{IF:Tp->FormExist()}}
 					<div class="CommentHead">Saisir votre commentaire ci-dessous</div>
-					<div class="CommentContent" style="padding-top:10px;">
+					<div class="{{statut}}">{{message}}</div>
+					{{ELSE}}
+					<div class="CommentContent">
 						<form method="post" action="">
-						<textarea name="com" style="width:100%;min-height:100px;"></textarea>
+						<input type="hidden" name="token" value="{{Core\Html\Form->generateToken()}}" />
+						<textarea name="com" class="ComArea"></textarea>
 						<input type="submit" class="btn btn-primary" value="Poster" />
 					</div>
+					{{ENDIF}}
 				</div>
             </div>
 			{{ELSE}}

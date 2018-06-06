@@ -54,15 +54,27 @@ class Comments
 	// ##############################################################################
 	// Fonction d'ajout d'un commentaire
 	// ##############################################################################
-	public function Add()
+	public function Add() : array
 	{
 		$id 		= intval($_GET['id']);
 		$auteur 	= intval($_SESSION['id']);
 		$contenu 	= nl2br(htmlentities($_POST['com']));
 		$date 		= date('Y-m-d H:i:s', time());
+		$token		= htmlentities($_POST['token']);
 		
-		$reponse = $this->db->Insert('INSERT INTO PostsCommentaire (IdPost, Auteur, Date, Contenu, Statut) VALUES (:idpost, :auteur, :date, :contenu, 0)',
-		array('idpost' => $id, 'auteur' => $auteur, 'date' => $date, 'contenu' => $contenu));												
+		if($token == $_SESSION['token'])
+		{
+			$reponse = $this->db->Insert('INSERT INTO PostsCommentaire (IdPost, Auteur, Date, Contenu, Statut) VALUES (:idpost, :auteur, :date, :contenu, 0)',
+			array('idpost' => $id, 'auteur' => $auteur, 'date' => $date, 'contenu' => $contenu));
+			
+			$_SESSION['token'] = '';
+			
+			return array('statut' => 'Succes', 'message' => 'Votre message à été posté, il sera visible dès sa validation par l\'administration');
+		}
+		else
+		{
+			return array('statut' => 'Fail', 'message' => 'Le token de vérification est incorrect');
+		}														
 	}
 }
 ?>

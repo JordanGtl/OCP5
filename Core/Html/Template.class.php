@@ -86,7 +86,7 @@ class Template
 				
 				foreach($resultsub[1] as $regex)
 				{
-					$prov = str_replace('{{'.$regex.'}}', utf8_encode($data->{$regex}), $prov);
+					$prov = str_replace('{{'.$regex.'}}', $data->{$regex}, $prov);
 				}
 				
 				$retour .= $prov;
@@ -120,12 +120,12 @@ class Template
 			{
 				if(strpos($regex, '()') === false)
 				{
-					$prov = str_replace('{{'.$regex.'}}', utf8_encode($data->{$regex}), $prov);
+					$prov = str_replace('{{'.$regex.'}}', $data->{$regex}, $prov);
 				}
 				else
 				{
 					$regex = str_replace('()', '', $regex);
-					$prov = str_replace('{{'.$regex.'()}}', utf8_encode($data->{$regex}()), $prov);
+					$prov = str_replace('{{'.$regex.'()}}', $data->{$regex}(), $prov);
 				}
 			}
 			
@@ -164,19 +164,21 @@ class Template
 	// ##############################################################################
 	protected function ParseConditionVarWithElse(string &$html, string $condition, string $if, string $else)
 	{
-		$pattern = '/({{IF:(.*)}})(.*)({{ELSE}})(.*)({{ENDIF}})/smU';
+		$pattern = '/({{IF:(.*)}})(.*?){{ELSE}}(.*){{ENDIF}}/smU';
 		preg_match_all($pattern, $html, $matches, PREG_OFFSET_CAPTURE, 3);
 		$count = count($matches[2]);
 		
 		for($i = 0; $i < $count; ++$i)
 		{
-			if(count($matches) >= 7)
+			if(count($matches) >= 5)
 			{
 				$retour 			= $this->vars[$condition];
 				$pattern 			= '{{IF:'.$condition.'}}'.$if.'{{ELSE}}'.$else.'{{ENDIF}}';
 				$html 				= str_replace($pattern, ($retour) ? $if : $else, $html);
 			}
 		}
+		
+		$this->ParsePhp($html);
 	}
 	
 
@@ -185,26 +187,47 @@ class Template
 	// ##############################################################################
 	protected function ParseConditionFunctionWithElse(string &$html, string $condition, string $if, string $else)
 	{
-		$pattern = '/({{IF:(.*)}})(.*)({{ELSE}})(.*)({{ENDIF}})/smU';
+		$pattern = '/({{IF:(.*)}})(.*?){{ELSE}}(.*){{ENDIF}}/smU';
 		preg_match_all($pattern, $html, $matches, PREG_OFFSET_CAPTURE, 3);
 		$count = count($matches[2]);
-		
-		for($i = 0; $i < $count; ++$i)
+
+		if(stripos($condition, 'Tp') !== false)
 		{
-			if(count($matches) >= 7)
-			{		
-				$conditioncut 	= explode('->', $condition);
-						
-				if(count($conditioncut) < 2)
-					throw new Exception('La syntaxe de la condition IF est incorrect');
-				
-			
-				$conditioncut[1] 	= str_replace('()', '', $conditioncut[1]);
-				$retour 			= $conditioncut[0]::{$conditioncut[1]}();
-				$pattern 			= '{{IF:'.$conditioncut[0].'->'.$conditioncut[1].'()}}'.$if.'{{ELSE}}'.$else.'{{ENDIF}}';
-				$html 				= str_replace($pattern, ($retour) ? $if : $else, $html);
+			if('Tp->FormExist()' == $condition)
+			{
+				if($this->FormExist())
+				{
+					$pattern 			= '{{IF:Tp->FormExist()}}'.$if.'{{ELSE}}'.$else.'{{ENDIF}}';
+					$html 				= str_replace($pattern, $if, $html);
+				}
+				else
+				{
+					$pattern 			= '{{IF:Tp->FormExist()}}'.$if.'{{ELSE}}'.$else.'{{ENDIF}}';
+					$html 				= str_replace($pattern, $else, $html);
+				}
 			}
 		}
+		else
+		{		
+			for($i = 0; $i < $count; ++$i)
+			{
+				if(count($matches) >= 5)
+				{		
+					$conditioncut 	= explode('->', $condition);
+							
+					if(count($conditioncut) < 2)
+						throw new Exception('La syntaxe de la condition IF est incorrect');
+					
+				
+					$conditioncut[1] 	= str_replace('()', '', $conditioncut[1]);
+					$retour 			= $conditioncut[0]::{$conditioncut[1]}();
+					$pattern 			= '{{IF:'.$conditioncut[0].'->'.$conditioncut[1].'()}}'.$if.'{{ELSE}}'.$else.'{{ENDIF}}';
+					$html 				= str_replace($pattern, ($retour) ? $if : $else, $html);
+				}
+			}
+		}
+		
+		$this->ParsePhp($html);
 	}
 	
 	// ##############################################################################
@@ -212,17 +235,17 @@ class Template
 	// ##############################################################################
 	protected function ParseConditionWithElse(string &$html)
 	{
-		$pattern = '/({{IF:(.*)}})(.*)({{ELSE}})(.*)({{ENDIF}})/smU';
+		$pattern = '/({{IF:(.*)}})(.*?){{ELSE}}(.*){{ENDIF}}/smU';
 		preg_match_all($pattern, $html, $matches, PREG_OFFSET_CAPTURE, 3);
 		$count = count($matches[2]);
 		
 		for($i = 0; $i < $count; ++$i)
 		{
-			if(count($matches) >= 7)
+			if(count($matches) >= 5)
 			{
 				$condition 		= $matches[2][$i][0];
 				$if 			= $matches[3][$i][0];
-				$else 			= $matches[5][$i][0];	
+				$else 			= $matches[4][$i][0];	
 				
 				if(strpos($matches[2][$i][0], '->') === false)
 				{
@@ -352,6 +375,14 @@ class Template
 		
 		if(is_array($this->callback))
 			call_user_func_array(array(${$this->callback[0]}->$classname, $functionname), array());
+	}
+	
+	// ##############################################################################
+	// Vérification de l'existence d'un formulaire envoyé
+	// ##############################################################################
+	public function FormExist() : bool
+	{
+		return (count($_POST) > 0) ? true : false; 
 	}
 	
 	// ##############################################################################

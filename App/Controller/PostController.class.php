@@ -61,10 +61,11 @@ class PostController extends AppController
 	{
 		$id 		= intval($_GET['id']);
 		$username 	= (isset($_SESSION['nom']) && isset($_SESSION['prenom'])) ? $_SESSION['nom'].' '.$_SESSION['prenom'] : '';
+		$args		= array('posts' => $this->model->GetPostById($id), 'comments' => $this->modelcom->getCommentListByPostId($id), 'username' => $username);
 		
 		if(count($_POST) > 0)
-			$this->modelcom->Add();
+			$args = array_merge($args, $this->modelcom->Add());
 		
-		$this->Render('Posts/posts.html', array('posts' => $this->model->GetPostById($id), 'comments' => $this->modelcom->getCommentListByPostId($id), 'username' => $username));
+		$this->Render('Posts/posts.html', $args);
 	}
 }

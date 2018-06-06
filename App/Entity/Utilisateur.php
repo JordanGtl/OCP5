@@ -21,40 +21,7 @@ class Utilisateur extends Entity
 	{
 		parent::__construct();
 		
-		$this->Hydrate($result);
-		
-		//////////////////////////////////////////////////
-		
-		/*$this->sqlfields = 'Id, NomDeCompte, Email, MotDePasse, Nom, Prenom, ValidationToken';
-		
-		switch($type)
-		{
-			case USER_ID:
-			{
-				$this->getById($id);
-				break;
-			}
-			case USER_LOGIN:
-			{
-				$this->getByLogin($id);
-				break;
-			}
-			case USER_EMAIL:
-			{
-				$this->getByEmail($id);
-				break;
-			}
-			case USER_MDPTOKEN:
-			{
-				$this->getByMdpToken($id);
-				break;
-			}
-			case USER_ACTIVATETOKEN:
-			{
-				$this->getByActivateToken($id);
-				break;
-			}
-		}	*/		
+		$this->Hydrate($result);	
 	}
 	
 	// ##############################################################################

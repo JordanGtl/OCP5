@@ -14,3 +14,5 @@
 .PostTitleSection > i{font-size:20px;}
 .PostComment{background:#fff;color:#575757;padding:15px 0;margin-top:15px;}
 .subname{font-size:2em;}
+.ComArea{width:100%;min-height:100px;}
+.CommentContent{padding-top:10px;}

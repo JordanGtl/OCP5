@@ -29,7 +29,7 @@ class Post extends Entity
 	// ##############################################################################
 	public function getTitle() : string
 	{
-		return $this->Titre ?? '';
+		return utf8_encode($this->Titre) ?? '';
 	}
 	
 	// ##############################################################################
