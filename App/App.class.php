@@ -80,7 +80,8 @@ class App
 			}
 			case 7: // Administration (requis droit admin)
 			{	
-				return $parseur->getPage('Admin/home.html');
+				$controller = new \App\Controller\AdminController();
+				$controller->ShowHome();
 				break;
 			}
 			case 8: // Mot de passe perdu
@@ -93,6 +94,12 @@ class App
 			{	
 				$controller = new \App\Controller\UsersController();
 				$controller->Logout();
+				break;
+			}
+			case 10: // Gestion des posts (admin)
+			{	
+				$controller = new \App\Controller\AdminController();
+				$controller->ShowAdminPost();
 				break;
 			}
 			case 5: // Erreur 404

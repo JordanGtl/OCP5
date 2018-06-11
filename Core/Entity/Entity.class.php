@@ -20,10 +20,13 @@ class Entity
 	// Création des variable de classes avec le résultat de la requete sql
 	// ##############################################################################
 	protected function Hydrate($result)
-	{			
+	{
+		if((is_array($result) && isset($result[0])) || is_object($result))
+			$this->exist = true;
+		
 		if(is_array($result) && isset($result[0]) && is_array($result[0]))
 		{
-			$result = $result[0];
+			$result = $result[0];	
 		}
 		if(is_array($result) && isset($result[0]) && is_object($result[0]))
 		{
@@ -39,7 +42,7 @@ class Entity
 			$this->{$key} = $data;
 		}
 		
-		$this->exist = true;
+		
 	}
 	
 	// ##############################################################################

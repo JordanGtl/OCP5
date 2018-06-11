@@ -2,6 +2,7 @@
 # Paramètres du site
 define('TITLE', 				'Blog - Jordan Guillot');
 define('ROOT', 					dirname(__DIR__));
+define('CHAPO_CHAR_LIMIT',		500);
 
 # Paramètre du hash mdp
 define('PASSWORD_HASH_START', 	'd5z8f5');

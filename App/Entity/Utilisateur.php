@@ -73,6 +73,14 @@ class Utilisateur extends Entity
 	}
 	
 	// ##############################################################################
+	// Fonction de récupération du rang de l'utilisateur
+	// ##############################################################################
+	public function getRank()
+	{
+		return $this->Rang ?? 0;
+	}
+	
+	// ##############################################################################
 	// Fonction d'edition du token de changement de mot de passe
 	// ##############################################################################
 	public function setPasswordToken() : string

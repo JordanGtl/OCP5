@@ -41,6 +41,17 @@ class Post extends Entity
 	}
 	
 	// ##############################################################################
+	// Fonction qui retourne le contenu
+	// ##############################################################################
+	public function getContenuWithoutHtml() : string
+	{
+		if(isset($this->Contenu))
+			return str_replace('<br />', '', $this->Contenu);
+		else
+			return '';
+	}
+	
+	// ##############################################################################
 	// Fonction qui retourne le chapo
 	// ##############################################################################
 	public function getChapo() : string
@@ -62,6 +73,14 @@ class Post extends Entity
 	public function getCommentNbr() : int
 	{
 		return $this->NbrComment ?? 0;
+	}
+	
+	// ##############################################################################
+	// Fonction qui retourne le nombre de commentaire
+	// ##############################################################################
+	public function getAuteur() : string
+	{
+		return ucfirst($this->Auteur) ?? 'Inconnu';
 	}
 	
 	// ##############################################################################

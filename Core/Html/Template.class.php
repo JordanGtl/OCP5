@@ -340,15 +340,15 @@ class Template
 	// ##############################################################################
 	private function ParseInclude(string &$html)
 	{
-		$pattern = '/\{\{INCLUDE=(.*)\}\}/U';
+		$pattern = '/\{\{INCLUDE:(.*)\}\}/U';
 		preg_match($pattern, $html, $matches, PREG_OFFSET_CAPTURE, 3);
 		if(isset($matches[1]))
 		{	
 			$file 	= $matches[1][0];
-			$retour = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/Datas/Template/'.$this->template.'/Pages/'.$file);			
-			$html 	= preg_replace('/\{\{INCLUDE=(.*)\}\}/s', $retour, $html);
+			$retour = file_get_contents(dirname($_SERVER['DOCUMENT_ROOT']).'/App/Views/'.$file);			
+			$html 	= preg_replace('/\{\{INCLUDE:(.*)\}\}/U', $retour, $html);
 			
-			$this->ParsePhp();
+			$this->ParsePhp($html);
 		}
 	}
 	

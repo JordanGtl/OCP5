@@ -1,0 +1,109 @@
+<style>
+.AdminMenu
+{
+background:#fff;color:#575757;
+}
+
+.AdminMenu > ul > li
+{
+	display:inline-block;
+	padding:0 10px;
+	border-right:solid 1px #ccc;
+	height:40px;
+	line-height:40px;
+	margin:0;
+}
+
+.AdminMenu > ul > li > a
+{
+	color: #1488b4;
+}
+
+.AdminMenu > ul > li > a:hover
+{
+	color: #02aff0;
+}
+
+
+.AdminMenu > ul > li > a > i
+{
+	margin-right:7px;
+}
+
+.AdminMenu > ul
+{
+	margin-bottom:0!important;
+}
+
+.formated-table
+{
+	width:100%;
+}
+
+.formated-table > thead > tr > td
+{
+	background:#eee;
+	font-weight:bold;
+	padding:5px;
+}
+
+.formated-table > tbody > tr > td
+{
+	padding:5px;
+}
+</style>
+{{IF:authorize}}
+<!-- Header -->
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12" style="padding:20px;">
+                    <div class="intro-text">
+                        <span class="name">Page gestion des posts</span>
+                    </div>
+                </div>
+            </div>
+			
+			{{INCLUDE:Admin/menu.html}}
+			
+			<div class="row">
+                <div class="col-lg-12" style="padding:20px;">
+                     <div class="intro-text AdminMenu" style="">
+                        <table class="formated-table" style="width:100%">
+							<thead>
+								<tr><td>Id</td><td>Titre</td><td>Date</td><td>Auteur</td><td>Actions</td></tr>
+							</thead>
+							<tbody>
+								{{FOREACH:posts}}
+								<tr><td>{{getId()}}</td><td>{{getTitle()}}</td><td>{{getFormatedDate()}}</td><td>{{getAuteur()}}</td><td><a href="{{LinkEdit}}"><i class="fa fa-pencil" style="margin-right:15px;"></i></a><a href="{{LinkTrash}}"><i class="fa fa-trash"></i></a></td></tr>
+								{{/FOREACH}}
+							</tbody>
+						</table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+{{ELSE}}
+ <header>
+	<div class="container">
+            <div class="row">
+                <div class="col-lg-12" style="padding:20px;">
+                    <div class="intro-text">
+                        <span class="name">Page Admin</span>
+                    </div>
+                </div>
+            </div>
+			
+			 <div class="row">
+                <div class="col-lg-12">
+                    <div class="intro-text Fail" style="background:#fff;padding:15px;">
+                        L'accès à cette page ne vous est pas autorisé.
+                    </div>
+                </div>
+            </div>
+		</div>
+		</header>
+{{ENDIF}}
+
+   

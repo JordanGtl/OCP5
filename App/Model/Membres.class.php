@@ -80,7 +80,7 @@ class Membres
 														$reponse = $this->db->Insert('INSERT INTO Utilisateurs (NomDeCompte, MotDePasse, Nom, Prenom, Email, ValidationToken, Rang) VALUES (:login, :mdp, :nom, :prenom, :email, :validationtoken, 0)',
 														array('login' => $login, 'mdp' => $mdpsql, 'nom' => $nom, 'prenom' => $prenom, 'email' => $email, 'validationtoken' => $validationtoken));
 														
-														$this->SendRegisterMail($email, $prenom.' '.$nom, 'http://'.$_SERVER['HTTP_HOST'].':'.$_SERVER['SERVER_PORT'].'/index.php?page=6&token='.$token);
+														$this->SendRegisterMail($email, $prenom.' '.$nom, 'http://'.$_SERVER['HTTP_HOST'].'/index.php?page=6&token='.$validationtoken);
 														
 														return array('register_statut' => 'Succes', 'register_message' => 'Inscription réussie, activer votre compte via l\'email que nous vous avons envoyé.');
 													}
@@ -196,7 +196,7 @@ class Membres
 		{
 			if(!empty($email))
 			{
-				$sql = $this->db->query('SELECT Id FROM Utilisateurs WHERE Email = ?', array($email));
+				$sql = $this->db->query('SELECT Id, Email FROM Utilisateurs WHERE Email = ?', array($email));
 				$user = new Utilisateur($sql);
 				
 				if($user->Exist())

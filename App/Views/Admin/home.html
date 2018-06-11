@@ -1,18 +1,114 @@
+<style>
+.AdminMenu
+{
+background:#fff;color:#575757;
+}
+
+.AdminMenu > ul > li
+{
+	display:inline-block;
+	padding:0 10px;
+	border-right:solid 1px #ccc;
+	height:40px;
+	line-height:40px;
+	margin:0;
+}
+
+.AdminMenu > ul > li > a
+{
+	color: #1488b4;
+}
+
+.AdminMenu > ul > li > a:hover
+{
+	color: #02aff0;
+}
+
+
+.AdminMenu > ul > li > a > i
+{
+	margin-right:7px;
+}
+
+.AdminMenu > ul
+{
+	margin-bottom:0!important;
+}
+</style>
+{{IF:authorize}}
 <!-- Header -->
     <header>
         <div class="container">
             <div class="row">
-                <div class="col-lg-12">
-                    <img class="img-responsive" src="img/profile.png" alt="">
+                <div class="col-lg-12" style="padding:20px;">
                     <div class="intro-text">
                         <span class="name">Page Admin</span>
-                        <hr class="star-light">
-                        <span class="skills">Coming soon.</span>
+                    </div>
+                </div>
+            </div>
+			
+			{{INCLUDE:Admin/menu.html}}
+			
+			<div class="row" style="margin-top:15px;">
+                <div class="col-lg-3" >
+                    <div class="intro-text AdminMenu" style="background:#fff;color:#575757;display:flex;padding:15px;">
+						<i class="fa fa-users" style="font-size:45px;margin-top:7px;"></i>
+						<div style="padding-left:15px;">
+							<div class="text-left" style="font-size:1em;">Utilisateurs</div>
+							<div class="text-left" style="font-size:2em;">{{usersnbr}}</div>
+						</div>
+                    </div>
+                </div>
+                <div class="col-lg-3" >
+                    <div class="intro-text AdminMenu" style="background:#fff;color:#575757;display:flex;padding:15px;">
+						<i class="fa fa-file" style="font-size:45px;margin-top:7px;"></i>
+						<div style="padding-left:15px;">
+							<div class="text-left" style="font-size:1em;">Posts</div>
+							<div class="text-left" style="font-size:2em;">{{postsnbr}}</div>
+						</div>
+                    </div>
+                </div>
+				<div class="col-lg-3" >
+                    <div class="intro-text AdminMenu" style="background:#fff;color:#575757;display:flex;padding:15px;">
+						<i class="fa fa-comments" style="font-size:45px;margin-top:7px;"></i>
+						<div style="padding-left:15px;">
+							<div class="text-left" style="font-size:1em;">Commentaires</div>
+							<div class="text-left" style="font-size:2em;">{{comsnbr}}</div>
+						</div>
+                    </div>
+                </div>
+				<div class="col-lg-3" >
+                    <div class="intro-text AdminMenu" style="background:#fff;color:#575757;display:flex;padding:15px;">
+						<i class="fa fa-commenting" style="font-size:45px;margin-top:7px;"></i>
+						<div style="padding-left:15px;">
+							<div class="text-left" style="font-size:1em;">Validations en attentes</div>
+							<div class="text-left" style="font-size:2em;">{{waitnbr}}</div>
+						</div>
                     </div>
                 </div>
             </div>
         </div>
     </header>
-
+{{ELSE}}
+ <header>
+	<div class="container">
+            <div class="row">
+                <div class="col-lg-12" style="padding:20px;">
+                    <div class="intro-text">
+                        <span class="name">Page Admin</span>
+                    </div>
+                </div>
+            </div>
+			
+			 <div class="row">
+                <div class="col-lg-12">
+                    <div class="intro-text Fail" style="background:#fff;padding:15px;">
+                        L'accès à cette page ne vous est pas autorisé.
+                    </div>
+                </div>
+            </div>
+		</div>
+		</header>
+{{ENDIF}}
 
    
