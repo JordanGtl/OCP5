@@ -50,16 +50,51 @@ class AdminController extends AppController
 		}
 		else if(isset($_GET['trash']))
 		{
-			$args = $this->admin->GetPostsDel();
-			$this->Render('Admin/postsdel.html', $args);
+			if(isset($_GET['confirm']))
+			{
+				$args = $this->admin->setPostsDel();	
+				$this->Render('Admin/postsdel.html', $args);
+			}
+			else
+			{
+				$args = $this->admin->GetPostsDel();
+				$args['confirm']= false;
+				$this->Render('Admin/postsdel.html', $args);
+			}
 		}
 		else
 		{
 			$args = $this->admin->GetPostsList();
 			$this->Render('Admin/posts.html', $args);
 		}
+	}
+	
+	public function ShowAddPost()
+	{
+		$args = $this->admin->getPostAdd();
 		
+		if(count($_POST) > 0)
+			$args = array_merge($args, $this->admin->setPostAdd());
+				
+		$this->Render('Admin/postsadd.html', $args);
+	}
+	
+	public function ShowWaitCom()
+	{
+		$args = $this->admin->getWaitCom();
 		
+		if(isset($_GET['confirm']))
+		{
+			$args = $this->admin->AcceptComment();
+			$this->Render('Admin/comedit.html', $args);
+		}
+		else if(isset($_GET['trash']))
+		{
+			$args = $this->admin->RefuseComment();
+			$this->Render('Admin/comedit.html', $args);
+		}
+		else
+		$this->Render('Admin/comwait.html', $args);
 	}
 }
 ?>

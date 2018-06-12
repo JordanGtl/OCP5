@@ -102,6 +102,18 @@ class App
 				$controller->ShowAdminPost();
 				break;
 			}
+			case 11: // Ajout d'un posts (admin)
+			{	
+				$controller = new \App\Controller\AdminController();
+				$controller->ShowAddPost();
+				break;
+			}
+			case 12: // Validation de commentaire
+			{	
+				$controller = new \App\Controller\AdminController();
+				$controller->ShowWaitCom();
+				break;
+			}
 			case 5: // Erreur 404
 			default:
 			{

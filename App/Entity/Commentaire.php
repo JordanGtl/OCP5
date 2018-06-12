@@ -16,11 +16,19 @@ class Commentaire extends Entity
 	}
 	
 	// ##############################################################################
+	// Fonction qui retourne l'id
+	// ##############################################################################
+	public function getId() : int
+	{
+		return $this->Id;
+	}
+	
+	// ##############################################################################
 	// Fonction qui retourne le contenu
 	// ##############################################################################
 	public function getContenu() : string
 	{
-		return $this->Contenu;
+		return $this->Contenu ?? '';
 	}
 	
 	// ##############################################################################
@@ -45,7 +53,15 @@ class Commentaire extends Entity
 	// ##############################################################################
 	public function getParentPost() : string
 	{
-		return $this->IdPost;
+		return $this->IdPost ?? 0;
+	}
+	
+	// ##############################################################################
+	// Fonction qui retourne le nom du post parent
+	// ##############################################################################
+	public function getParentPostName() : string
+	{
+		return $this->ParentPost ?? 'inconnu';
 	}
 	
 	// ##############################################################################
@@ -54,6 +70,16 @@ class Commentaire extends Entity
 	public function IsPublied() : bool
 	{
 		return boolval($this->Statut);
+	}
+	
+	public function getAgreeLink() : string
+	{
+		return 'index.php?page='.$_GET['page'].'&confirm=1&id='.$this->Id;
+	}
+	
+	public function getRemoveLink() : string
+	{
+		return 'index.php?page='.$_GET['page'].'&trash=1&id='.$this->Id;
 	}
 }
 ?>

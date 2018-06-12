@@ -8,18 +8,32 @@
             <div class="row">
                 <div class="col-lg-12" style="padding:20px;">
                     <div class="intro-text">
-                        <span class="name">Page gestion des posts - Suppression</span>
+                        <span class="name">Page gestion des commentaires - Validation</span>
                     </div>
                 </div>
             </div>
 			
-			{{INCLUDE:Admin/menu.html}}
+			 {{INCLUDE:Admin/menu.html}}
 			
+
 			<div class="row">
                 <div class="col-lg-12" style="padding:20px;">
-                     <div class="intro-text AdminMenu p-4">
-                       <div class="{{statut}}">{{message}}</div>
-					   <a href="{{link}}">{{linktext}}</a>
+                     <div class="intro-text AdminMenu text-left" style="">
+						
+						{{FOREACH:liste}}
+						<div style="display:flex;">
+							<div style="padding:15px;border-bottom:solid 1px #eee;flex:1;">
+								<div style="font-weight:bold;font-size:16px;">{{getAuteur()}}</div>
+								<small style="font-size:11px;font-style:italic;color:#aaa;">Sur le post : {{getParentPostName()}}, le {{getFormatedDate()}}</small>
+								<div>{{getContenu()}}</div>
+							</div>
+							<div style="padding:15px;font-size:20px;">
+								<a href="{{getAgreeLink()}}"><i class="fa fa-check"></i></a>
+								<a href="{{getRemoveLink()}}"><i class="fa fa-trash"></i></a>
+							</div>
+						</div>
+						{{/FOREACH}}
+						
                     </div>
                 </div>
             </div>

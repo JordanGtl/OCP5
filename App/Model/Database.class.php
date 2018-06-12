@@ -52,5 +52,11 @@ class Database
 		$req = $this->getDb()->prepare($query);
 		$req->execute($arg);
 	}
+	
+	public function Del($query, $arg = array())
+	{
+		$req = $this->getDb()->prepare($query);
+		$req->execute($arg);
+	}
 }
 ?>
