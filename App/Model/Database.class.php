@@ -4,7 +4,7 @@ use PDO;
 
 class Database
 {
-	private $db;
+	private $database;
 	private static $_instance;
 	
 	public function __construct()
@@ -23,13 +23,13 @@ class Database
 	
 	private function getDb()
 	{
-		if($this->db === null)
+		if($this->database === null)
 		{
-			$this->db = new PDO('mysql:dbname='.SQL_DB.';host='.SQL_HOST, SQL_USER, SQL_MDP);
-			$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$this->database = new PDO('mysql:dbname='.SQL_DB.';host='.SQL_HOST, SQL_USER, SQL_MDP);
+			$this->database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		}
 		
-		return $this->db;
+		return $this->database;
 	}
 	
 	public function query($query, $arg = array())

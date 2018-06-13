@@ -85,12 +85,12 @@ class AdminController extends AppController
 		
 		if(isset($_GET['confirm']))
 		{
-			$args = $this->admin->AcceptComment();
+			$args = array_merge($args, $this->admin->AcceptComment());
 			$this->Render('Admin/comedit.html', $args);
 		}
 		else if(isset($_GET['trash']))
 		{
-			$args = $this->admin->RefuseComment();
+			$args = array_merge($args, $this->admin->RefuseComment());
 			$this->Render('Admin/comedit.html', $args);
 		}
 		else

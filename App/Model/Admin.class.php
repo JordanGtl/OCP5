@@ -76,7 +76,7 @@ class Admin
 			return array('authorize' => true, 'posts' => $posts);
 		}
 		else
-			return array('authorize' => false);
+			return array('authorize' => false, 'posts' => array());
 	}
 	
 	// ##############################################################################
@@ -259,7 +259,7 @@ class Admin
 			return array('authorize' => true, 'liste' => $coms);
 		}
 		else
-			return array('authorize' => false);
+			return array('authorize' => false, 'liste' => array());
 	}
 	
 	// ##############################################################################

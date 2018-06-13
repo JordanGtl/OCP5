@@ -1,6 +1,8 @@
 <?php
 namespace Core\Controller;
 
+use Core\Html\Template;
+
 class Controller
 {
 	private $parseur;
@@ -10,7 +12,15 @@ class Controller
 	// ##############################################################################
 	public function __construct()
 	{
-		$this->parseur = \Core\Html\Template::getInstance();
+		$this->Init();
+	}
+	
+	// ##############################################################################
+	// Initialisation des propriétés
+	// ##############################################################################
+	public function Init()
+	{
+		$this->parseur = Template::getInstance();
 	}
 	
 	// ##############################################################################

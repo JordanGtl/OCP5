@@ -1,6 +1,8 @@
 <?php
 namespace Core\Html;
 
+use Core\Objects\Session;
+
 class Form
 {
 	private static $_instance;
@@ -23,8 +25,10 @@ class Form
 	// ##############################################################################
 	public function generateToken() : string
 	{
-		$_SESSION['token'] = md5(uniqid(rand(), TRUE));
-		return $_SESSION['token'];
+		$session = new Session();
+		$session->vars['token'] = md5(uniqid(rand(), TRUE));
+		
+		return $session->vars['token'];
 	}
 }
 ?>
