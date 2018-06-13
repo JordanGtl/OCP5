@@ -28,7 +28,7 @@ class UsersController extends AppController
 	{
 		$this->db = Database::getInstance();
 		
-		$args = (count($_POST) > 0) ? $this->membre->AjoutMembre() : [];
+		$args = (isset($_POST['token'])) ? $this->membre->AjoutMembre() : [];
 		
 		$this->Render('Users/inscription.html', $args);
 	}
@@ -38,7 +38,7 @@ class UsersController extends AppController
 	// ##############################################################################
 	public function ShowLogin()
 	{
-		$args = (count($_POST) > 0) ? $this->membre->AuthUser(): [];
+		$args = (isset($_POST['token'])) ? $this->membre->AuthUser(): [];
 		
 		$this->Render('Users/connexion.html', $args);
 	}
@@ -50,14 +50,14 @@ class UsersController extends AppController
 	{		
 		if(!isset($_GET['token']))
 		{
-			$args = (count($_POST) > 0) ? $this->membre->PasswordLost() : [];
+			$args = (isset($_POST['token']) ? $this->membre->PasswordLost() : [];
 			$this->Render('Users/mdplost.html', $args);
 		}
 		else
 		{
 			$user = $this->membre->VerifPasswordToken($_GET['token']);
 						
-			if(count($_POST) > 0)
+			if(isset($_POST['token']))
 				$args = $this->membre->SetLostPassword();
 			else
 				$args = array();

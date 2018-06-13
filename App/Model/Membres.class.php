@@ -3,22 +3,23 @@ namespace App\Model;
 
 use \Mailjet\Resources;
 use \App\Entity\Utilisateur;
+use \Core\Objects\Session;
 
 class Membres
 {
 	private static $_instance;
-	private $db;
+	private $database;
 	
 	// ##############################################################################
 	// Constructeur de classe
 	// ##############################################################################
 	public function __construct()
 	{
-		$this->db = Database::getInstance();
+		$this->database = Database::getInstance();
 	}
 		
 	// ##############################################################################
-	// CRetourne l'instance de la classe
+	// Retourne l'instance de la classe
 	// ##############################################################################
 	public static function getInstance()
 	{
@@ -35,14 +36,14 @@ class Membres
 	// ##############################################################################
 	public function AjoutMembre() : array
 	{
-		$login 		= strtolower(htmlentities($_POST['login']));
-		$token 		= htmlentities($_POST['token']);
-		$mdp 		= htmlentities($_POST['mdp']);
-		$mdpr 		= htmlentities($_POST['mdpr']);
-		$email 		= strtolower(htmlentities($_POST['email']));
-		$nom 		= htmlentities($_POST['nom']);
-		$prenom 	= htmlentities($_POST['prenom']);
-		$captcha 	= htmlentities($_POST['g-recaptcha-response']);
+		$login 		= strtolower(filter_input(INPUT_POST, 'login', FILTER_SANITIZE_STRING));
+		$token 		= filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
+		$mdp 		= filter_input(INPUT_POST, 'mdp', FILTER_SANITIZE_STRING);
+		$mdpr 		= filter_input(INPUT_POST, 'mdpr', FILTER_SANITIZE_STRING);
+		$email 		= strtolower(filter_input(INPUT_POST, 'login', FILTER_SANITIZE_EMAIL));
+		$nom 		= filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_STRING);
+		$prenom 	= filter_input(INPUT_POST, 'prenom', FILTER_SANITIZE_STRING);
+		$captcha 	= filter_input(INPUT_POST, 'g-recaptcha-response', FILTER_SANITIZE_STRING);
 
 		if(!empty($captcha))
 		{
@@ -64,12 +65,12 @@ class Membres
 										{
 											if(!empty($prenom))
 											{
-												$user = $this->db->query('SELECT Id FROM Utilisateurs WHERE NomDeCompte = ?', array($login));
+												$user = $this->database->query('SELECT Id FROM Utilisateurs WHERE NomDeCompte = ?', array($login));
 												$user = new Utilisateur($user);
 												
 												if(!$user->Exist())
 												{
-													$usermail = $this->db->query('SELECT Id FROM Utilisateurs WHERE Email = ?', array($email));
+													$usermail = $this->database->query('SELECT Id FROM Utilisateurs WHERE Email = ?', array($email));
 													$usermail = new Utilisateur($usermail);
 
 													if(!$usermail->Exist())
@@ -77,7 +78,7 @@ class Membres
 														$validationtoken = md5(uniqid(rand(), TRUE));
 														$mdpsql = password_hash(PASSWORD_HASH_START.$login.':'.$mdp.PASSWORD_HASH_END, PASSWORD_DEFAULT);
 														
-														$reponse = $this->db->Insert('INSERT INTO Utilisateurs (NomDeCompte, MotDePasse, Nom, Prenom, Email, ValidationToken, Rang) VALUES (:login, :mdp, :nom, :prenom, :email, :validationtoken, 0)',
+														$this->database->Insert('INSERT INTO Utilisateurs (NomDeCompte, MotDePasse, Nom, Prenom, Email, ValidationToken, Rang) VALUES (:login, :mdp, :nom, :prenom, :email, :validationtoken, 0)',
 														array('login' => $login, 'mdp' => $mdpsql, 'nom' => $nom, 'prenom' => $prenom, 'email' => $email, 'validationtoken' => $validationtoken));
 														
 														$this->SendRegisterMail($email, $prenom.' '.$nom, 'http://'.$_SERVER['HTTP_HOST'].'/index.php?page=6&token='.$validationtoken);
@@ -126,14 +127,14 @@ class Membres
 	// ##############################################################################
 	private function CheckRecaptchaInfo(string $captcha) : bool
 	{
-		$ch = curl_init();
+		$request = curl_init();
 
-		curl_setopt($ch, CURLOPT_URL,"https://www.google.com/recaptcha/api/siteverify");
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, "secret=6Ldph1oUAAAAANWTm5ZBkT7mCf6HSXJYqg1-i4Ul&response=".$captcha);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$output = json_decode(curl_exec ($ch));
-		curl_close ($ch);
+		curl_setopt($request, CURLOPT_URL,"https://www.google.com/recaptcha/api/siteverify");
+		curl_setopt($request, CURLOPT_POST, 1);
+		curl_setopt($request, CURLOPT_POSTFIELDS, "secret=6Ldph1oUAAAAANWTm5ZBkT7mCf6HSXJYqg1-i4Ul&response=".$captcha);
+		curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+		$output = json_decode(curl_exec ($request));
+		curl_close ($request);
 		
 		return boolval($output->success);
 	}
@@ -143,11 +144,11 @@ class Membres
 	// ##############################################################################
 	public function AuthUser() : array
 	{
-		$login 	= strtolower(htmlentities($_POST['login']));
-		$mdp 	= htmlentities($_POST['mdp']);
-		$token 	= htmlentities($_POST['token']);
+		$login 	= strtolower(filter_input(INPUT_POST, 'login', FILTER_SANITIZE_STRING));
+		$mdp 	= filter_input(INPUT_POST, 'mdp', FILTER_SANITIZE_STRING);
+		$token 	= filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
 
-		$user = $this->db->query('SELECT Id, MotDePasse, ValidationToken, Nom, Prenom FROM Utilisateurs WHERE NomDeCompte = ?', array($login));
+		$user = $this->database->query('SELECT Id, MotDePasse, ValidationToken, Nom, Prenom FROM Utilisateurs WHERE NomDeCompte = ?', array($login));
 		
 		if($token == $_SESSION['token'])
 		{
@@ -155,10 +156,12 @@ class Membres
 			{
 				if($user[0]->ValidationToken == '')
 				{
-					$_SESSION['login'] = $login;
-					$_SESSION['id'] = $user[0]->Id;
-					$_SESSION['nom'] = $user[0]->Nom;
-					$_SESSION['prenom'] = $user[0]->Prenom;
+                    $session = new Session();
+                    $session->vars['login'] = $login;
+                    $session->vars['id'] = $user[0]->Id;
+                    $session->vars['nom'] = $user[0]->Nom;
+                    $session->vars['prenom'] = $user[0]->Prenom;
+
 					header('location:index.php');
 					return array('register_statut' => 'Succes', 'register_message' => 'Connexion réussie, vous allez être redirigé');
 				}
@@ -177,7 +180,7 @@ class Membres
 	// ##############################################################################
 	public function VerifPasswordToken(string $token) : Utilisateur
 	{
-		$sql = $this->db->query('SELECT Id, Nom, Prenom FROM Utilisateurs WHERE PasswordToken = ?', array($token));
+		$sql = $this->database->query('SELECT Id, Nom, Prenom FROM Utilisateurs WHERE PasswordToken = ?', array($token));
 		
 		$user = new Utilisateur($sql);
 		
@@ -189,35 +192,28 @@ class Membres
 	// ##############################################################################
 	public function PasswordLost() : array
 	{
-		$email = htmlentities($_POST['email']);
-		$token = htmlentities($_POST['token']);
+		$email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+		$token = filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
 		
 		if($token == $_SESSION['token'])
 		{
-			if(!empty($email))
-			{
-				$sql = $this->db->query('SELECT Id, Email FROM Utilisateurs WHERE Email = ?', array($email));
-				$user = new Utilisateur($sql);
-				
-				if($user->Exist())
-				{
-					$token = $user->setPasswordToken();
-					$this->SendLostPasswordMail($user->getEmail(), $user->getFullname(), $_SERVER['HTTP_HOST'].'/index.php?page=8&token='.$token);
-					
-					return array('statut' => 'Success', 'message' => 'L\'email de récupération à été envoyé');
-				}
-				else
-					return array('statut' => 'Fail', 'message' => 'L\'email n\'est associé à aucun compte');
-			}
-			else
-			{
-				return array('statut' => 'Fail', 'message' => 'Aucun email renseigné');
-			}	
+			if(!empty($email)) {
+                $sql = $this->database->query('SELECT Id, Email FROM Utilisateurs WHERE Email = ?', array($email));
+                $user = new Utilisateur($sql);
+
+                if ($user->Exist()) {
+                    $token = $user->setPasswordToken();
+                    $this->SendLostPasswordMail($user->getEmail(), $user->getFullname(), $_SERVER['HTTP_HOST'] . '/index.php?page=8&token=' . $token);
+
+                    return array('statut' => 'Success', 'message' => 'L\'email de récupération à été envoyé');
+                }
+
+                return array('statut' => 'Fail', 'message' => 'L\'email n\'est associé à aucun compte');
+            }
+
+            return array('statut' => 'Fail', 'message' => 'Aucun email renseigné');
 		}
-		else
-		{
-			return array('statut' => 'Fail', 'message' => 'Le token de vérification est incorrect');
-		}	
+		return array('statut' => 'Fail', 'message' => 'Le token de vérification est incorrect');
 	}
 	
 	// ##############################################################################
@@ -313,11 +309,11 @@ class Membres
 	// ##############################################################################
 	public function SetLostPassword()
 	{
-		$token 	= htmlentities($_GET['token'] ?? '');
-		$mdp 	= htmlentities($_POST['mdp']);
-		$mdpr 	= htmlentities($_POST['mdpr']);
+		$token 	= filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
+		$mdp 	= filter_input(INPUT_POST, 'mdp', FILTER_SANITIZE_STRING);
+		$mdpr 	= filter_input(INPUT_POST, 'mdpr', FILTER_SANITIZE_STRING);
 		
-		$sql 	= $this->db->query('SELECT Id, NomDeCompte, MotDePasse FROM Utilisateurs WHERE PasswordToken = ?', array($token));
+		$sql 	= $this->database->query('SELECT Id, NomDeCompte, MotDePasse FROM Utilisateurs WHERE PasswordToken = ?', array($token));
 		$user 	= new Utilisateur($sql);
 		
 		if($user->Exist())
@@ -325,7 +321,7 @@ class Membres
 			if($mdp == $mdpr)
 			{
 				$user->setPassword($mdp);
-				$reponse = $this->db->Update('UPDATE Utilisateurs SET MotDePasse = :mdp, PasswordToken = "" WHERE Id = :id', array('id' => $user->getId(), 'mdp' => $user->getPasswordHash()));
+				$this->database->Update('UPDATE Utilisateurs SET MotDePasse = :mdp, PasswordToken = "" WHERE Id = :id', array('id' => $user->getId(), 'mdp' => $user->getPasswordHash()));
 				return array('Statut' => 'Succes', 'Message' => 'Mot de passe modifié avec succès, vous pouvez vous connecter.');
 			}
 			else
@@ -343,13 +339,13 @@ class Membres
 	// ##############################################################################
 	public function ActiveAccount() : array
 	{
-		$sql 	= $this->db->query('SELECT Id, NomDeCompte FROM Utilisateurs WHERE ValidationToken = ?', array($_GET['token']));
+		$sql 	= $this->database->query('SELECT Id, NomDeCompte FROM Utilisateurs WHERE ValidationToken = ?', array(filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING)));
 		$user = new Utilisateur($sql);
 		
 		if($user->Exist())
 		{
 			$user->setActive();
-			$this->db->Update('UPDATE Utilisateurs SET ValidationToken = "" WHERE Id = :id', array('id' => $user->getId()));
+			$this->database->Update('UPDATE Utilisateurs SET ValidationToken = "" WHERE Id = :id', array('id' => $user->getId()));
 			return array('statut' => 'Succes', 'message' => 'L\'activation du compte est terminé, vous pouvez vous connecter dès maintenant');
 		}
 		else

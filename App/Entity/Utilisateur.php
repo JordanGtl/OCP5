@@ -11,8 +11,6 @@ define('USER_ACTIVATETOKEN', 4);
 
 class Utilisateur extends Entity
 {	
-	private $sqlfields;
-
 	// ##############################################################################
 	// Constructeur de classe
 	// Crée les variable de classe en fonction des champs de la table
@@ -87,7 +85,7 @@ class Utilisateur extends Entity
 	{
 		$token = md5(uniqid(rand(), TRUE));
 		
-		$reponse = $this->db->Update('UPDATE Utilisateurs SET PasswordToken = :token WHERE Id = :id', array('id' => $this->Id, 'token' => $token));
+		$this->db->Update('UPDATE Utilisateurs SET PasswordToken = :token WHERE Id = :id', array('id' => $this->Id, 'token' => $token));
 		
 		return $token;
 	}

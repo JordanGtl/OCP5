@@ -5,14 +5,12 @@ use \App\Model\Database;
 class Entity
 {
 	protected $exist;
-	protected $db;
-	
+
 	// ##############################################################################
 	// Constructeur de classe
 	// ##############################################################################
 	public function __construct()
 	{
-		$this->db = Database::getInstance();
 		$this->exist = false;
 	}
 	
@@ -24,12 +22,8 @@ class Entity
 		if((is_array($result) && isset($result[0])) || is_object($result))
 			$this->exist = true;
 		
-		if(is_array($result) && isset($result[0]) && is_array($result[0]))
-		{
-			$result = $result[0];	
-		}
-		if(is_array($result) && isset($result[0]) && is_object($result[0]))
-		{
+		if(is_array($result) && isset($result[0]))
+        {
 			$result = (array)$result[0];
 		}
 		elseif(is_object($result))
@@ -41,8 +35,6 @@ class Entity
 		{
 			$this->{$key} = $data;
 		}
-		
-		
 	}
 	
 	// ##############################################################################

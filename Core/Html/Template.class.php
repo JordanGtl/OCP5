@@ -43,11 +43,10 @@ class Template
 		{
 			$this->html = file_get_contents($file);
 			$this->ParsePhp($this->html);
+			return;
 		}
-		else
-		{
-			$this->html = "le fichier template <b>" . $file . "</b> n'existe pas";
-		}
+
+		$this->html = "le fichier template <b>" . $file . "</b> n'existe pas";
 	}
 	
 	// ##############################################################################
@@ -59,7 +58,9 @@ class Template
 		$this->vars = $args;
 		
 		$this->ParsePhp($this->page);
-		echo str_replace('{PAGES_DATA}', $this->page, $this->html);
+		$template = str_replace('{PAGES_DATA}', $this->page, $this->html);
+
+		echo $template;
 	}
 	
 	// ##############################################################################
@@ -130,8 +131,6 @@ class Template
 			}
 			
 			$retour .= $prov;
-			
-			
 		}
 	
 		$html = preg_replace('/{{FOREACH:'.addslashes($result[1][$index]).'}}(.*){{\/FOREACH}}/mUs', $retour, $html);
@@ -162,7 +161,7 @@ class Template
 	// ##############################################################################
 	// Fonction de parsage d'une condition IF avec une variable
 	// ##############################################################################
-	protected function ParseConditionVarWithElse(string &$html, string $condition, string $if, string $else)
+	protected function ParseConditionVarWithElse(string &$html, string $condition, string $ifdata, string $elsedata)
 	{
 		$pattern = '/({{IF:(.*)}})(.*?){{ELSE}}(.*){{ENDIF}}/smU';
 		preg_match_all($pattern, $html, $matches, PREG_OFFSET_CAPTURE, 3);
@@ -173,8 +172,8 @@ class Template
 			if(count($matches) >= 5)
 			{
 				$retour 			= $this->vars[$condition];
-				$pattern 			= '{{IF:'.$condition.'}}'.$if.'{{ELSE}}'.$else.'{{ENDIF}}';
-				$html 				= str_replace($pattern, ($retour) ? $if : $else, $html);
+				$pattern 			= '{{IF:'.$condition.'}}'.$ifdata.'{{ELSE}}'.$elsedata.'{{ENDIF}}';
+				$html 				= str_replace($pattern, ($retour) ? $ifdata : $elsedata, $html);
 			}
 		}
 		
@@ -183,9 +182,9 @@ class Template
 	
 
 	// ##############################################################################
-	// Fonciton de parsage d'une condition IF avec une fonction
+	// Fonction de parsage d'une condition IF avec une fonction
 	// ##############################################################################
-	protected function ParseConditionFunctionWithElse(string &$html, string $condition, string $if, string $else)
+	protected function ParseConditionFunctionWithElse(string &$html, string $condition, string $ifdata, string $elsedata)
 	{
 		$pattern = '/({{IF:(.*)}})(.*?){{ELSE}}(.*){{ENDIF}}/smU';
 		preg_match_all($pattern, $html, $matches, PREG_OFFSET_CAPTURE, 3);
@@ -197,13 +196,13 @@ class Template
 			{
 				if($this->FormExist())
 				{
-					$pattern 			= '{{IF:Tp->FormExist()}}'.$if.'{{ELSE}}'.$else.'{{ENDIF}}';
-					$html 				= str_replace($pattern, $if, $html);
+					$pattern 			= '{{IF:Tp->FormExist()}}'.$ifdata.'{{ELSE}}'.$elsedata.'{{ENDIF}}';
+					$html 				= str_replace($pattern, $ifdata, $html);
 				}
 				else
 				{
-					$pattern 			= '{{IF:Tp->FormExist()}}'.$if.'{{ELSE}}'.$else.'{{ENDIF}}';
-					$html 				= str_replace($pattern, $else, $html);
+					$pattern 			= '{{IF:Tp->FormExist()}}'.$ifdata.'{{ELSE}}'.$elsedata.'{{ENDIF}}';
+					$html 				= str_replace($pattern, $elsedata, $html);
 				}
 			}
 		}
@@ -221,8 +220,8 @@ class Template
 				
 					$conditioncut[1] 	= str_replace('()', '', $conditioncut[1]);
 					$retour 			= $conditioncut[0]::{$conditioncut[1]}();
-					$pattern 			= '{{IF:'.$conditioncut[0].'->'.$conditioncut[1].'()}}'.$if.'{{ELSE}}'.$else.'{{ENDIF}}';
-					$html 				= str_replace($pattern, ($retour) ? $if : $else, $html);
+					$pattern 			= '{{IF:'.$conditioncut[0].'->'.$conditioncut[1].'()}}'.$ifdata.'{{ELSE}}'.$elsedata.'{{ENDIF}}';
+					$html 				= str_replace($pattern, ($retour) ? $ifdata : $elsedata, $html);
 				}
 			}
 		}
@@ -345,7 +344,8 @@ class Template
 		if(isset($matches[1]))
 		{	
 			$file 	= $matches[1][0];
-			$retour = file_get_contents(dirname($_SERVER['DOCUMENT_ROOT']).'/App/Views/'.$file);			
+
+			$retour = file_get_contents(dirname(filter_input(INPUT_SERVER, 'DOCUMENT_ROOT')).'/App/Views/'.$file);
 			$html 	= preg_replace('/\{\{INCLUDE:(.*)\}\}/U', $retour, $html);
 			
 			$this->ParsePhp($html);

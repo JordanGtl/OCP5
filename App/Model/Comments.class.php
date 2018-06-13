@@ -6,14 +6,14 @@ use \App\Entity\Commentaire;
 class Comments
 {
 	private static $_instance;
-	private $db;
+	private $database;
 	
 	// ##############################################################################
 	// Constructeur de classe
 	// ##############################################################################	
 	public function __construct()
 	{
-		$this->db = Database::getInstance();	
+		$this->database = Database::getInstance();
 	}	
 	
 	// ##############################################################################
@@ -32,15 +32,15 @@ class Comments
 	// ##############################################################################
 	// Retourne la liste des commentaire via l'id du post
 	// ##############################################################################
-	public function getCommentListByPostId(int $id) : array
+	public function getCommentListByPostId(int $ident) : array
 	{
 		$comments = array();
 		
-		$req 	= $this->db->query('SELECT PostsCommentaire.Id, CONCAT(Utilisateurs.Nom , " " , Utilisateurs.Prenom) AS Auteur , PostsCommentaire.Date, PostsCommentaire.Contenu 
+		$req 	= $this->database->query('SELECT PostsCommentaire.Id, CONCAT(Utilisateurs.Nom , " " , Utilisateurs.Prenom) AS Auteur , PostsCommentaire.Date, PostsCommentaire.Contenu 
 		FROM PostsCommentaire 
 		INNER JOIN Utilisateurs ON Utilisateurs.Id = PostsCommentaire.Auteur 
 		WHERE PostsCommentaire.Statut = 1 AND PostsCommentaire.IdPost = ?
-		ORDER BY PostsCommentaire.Date DESC', array($id));
+		ORDER BY PostsCommentaire.Date DESC', array($ident));
 		
 		foreach($req as $data)
 		{
@@ -56,25 +56,21 @@ class Comments
 	// ##############################################################################
 	public function Add() : array
 	{
-		$id 		= intval($_GET['id']);
+		$ident 		= filter_input(INPUT_GET, 'id', FILTER_SANITIZE_INT);
 		$auteur 	= intval($_SESSION['id']);
-		$contenu 	= nl2br(htmlentities($_POST['com']));
+		$contenu 	= nl2br(filter_input(INPUT_POST, 'com', FILTER_SANITIZE_STRING));
 		$date 		= date('Y-m-d H:i:s', time());
-		$token		= htmlentities($_POST['token']);
+		$token		= filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
 		
 		if($token == $_SESSION['token'])
 		{
-			$reponse = $this->db->Insert('INSERT INTO PostsCommentaire (IdPost, Auteur, Date, Contenu, Statut) VALUES (:idpost, :auteur, :date, :contenu, 0)',
-			array('idpost' => $id, 'auteur' => $auteur, 'date' => $date, 'contenu' => $contenu));
-			
-			$_SESSION['token'] = '';
-			
+			$this->database->Insert('INSERT INTO PostsCommentaire (IdPost, Auteur, Date, Contenu, Statut) VALUES (:idpost, :auteur, :date, :contenu, 0)',
+			array('idpost' => $ident, 'auteur' => $auteur, 'date' => $date, 'contenu' => $contenu));
+
 			return array('statut' => 'Succes', 'message' => 'Votre message à été posté, il sera visible dès sa validation par l\'administration');
 		}
-		else
-		{
-			return array('statut' => 'Fail', 'message' => 'Le token de vérification est incorrect');
-		}														
+
+		return array('statut' => 'Fail', 'message' => 'Le token de vérification est incorrect');
 	}
 }
 ?>

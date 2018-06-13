@@ -36,11 +36,10 @@ class PostController extends AppController
 				$prov->Id = 0;
 				
 				$posts[$i] = $prov;
+				continue;
 			}
-			else
-			{
-				$posts[$i]->Link = 'index.php?page=1&id='.$posts[$i]->Id;
-			}
+
+			$posts[$i]->Link = 'index.php?page=1&id='.$posts[$i]->Id;
 		}
 		
 		$this->Render('home.html', array('posts' => $posts));
@@ -59,11 +58,11 @@ class PostController extends AppController
 	// ##############################################################################
 	public function ShowPost()
 	{
-		$id 		= intval($_GET['id']);
+		$ident 		= filter_input(INPUT_GET, 'id', FILTER_SANITIZE_INT);
 		$username 	= (isset($_SESSION['nom']) && isset($_SESSION['prenom'])) ? $_SESSION['nom'].' '.$_SESSION['prenom'] : '';
-		$args		= array('posts' => $this->model->GetPostById($id), 'comments' => $this->modelcom->getCommentListByPostId($id), 'username' => $username);
+		$args		= array('posts' => $this->model->GetPostById($ident), 'comments' => $this->modelcom->getCommentListByPostId($ident), 'username' => $username);
 		
-		if(count($_POST) > 0)
+		if(isset($_POST['token']))
 			$args = array_merge($args, $this->modelcom->Add());
 		
 		$this->Render('Posts/posts.html', $args);
