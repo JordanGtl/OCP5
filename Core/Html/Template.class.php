@@ -60,7 +60,7 @@ class Template
 		$this->ParsePhp($this->page);
 		$template = str_replace('{PAGES_DATA}', $this->page, $this->html);
 
-		echo $template;
+		echo filter_var($template);
 	}
 	
 	// ##############################################################################

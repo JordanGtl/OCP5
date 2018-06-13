@@ -56,7 +56,7 @@ class Comments
 	// ##############################################################################
 	public function Add() : array
 	{
-		$ident 		= filter_input(INPUT_GET, 'id', FILTER_SANITIZE_INT);
+		$ident 		= filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
 		$auteur 	= intval($_SESSION['id']);
 		$contenu 	= nl2br(filter_input(INPUT_POST, 'com', FILTER_SANITIZE_STRING));
 		$date 		= date('Y-m-d H:i:s', time());

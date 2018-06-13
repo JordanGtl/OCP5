@@ -48,16 +48,16 @@ class UsersController extends AppController
 	// ##############################################################################
 	public function ShowPasswordLost()
 	{		
-		if(!isset($_GET['token']))
+		if(filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING) == null)
 		{
-			$args = (isset($_POST['token']) ? $this->membre->PasswordLost() : [];
+			$args = (filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING) != null) ? $this->membre->PasswordLost() : [];
 			$this->Render('Users/mdplost.html', $args);
 		}
 		else
 		{
 			$user = $this->membre->VerifPasswordToken($_GET['token']);
-						
-			if(isset($_POST['token']))
+
+            if(filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING) != null)
 				$args = $this->membre->SetLostPassword();
 			else
 				$args = array();
@@ -79,15 +79,14 @@ class UsersController extends AppController
 		session_destroy();
 		header('location:index.php');
 	}
-	
+
 	// ##############################################################################
 	//Controller d'activation d'un compte
 	// ##############################################################################
 	public function ActivateAccount()
 	{
-		$retour = (isset($_GET['token'])) ? $this->membre->ActiveAccount() : array('message' => 'Aucun token d\'activation n\'est renseigné');
-		
+		$retour = (filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING) != null) ? $this->membre->ActiveAccount() : array('message' => 'Aucun token d\'activation n\'est renseigné');
+
 		$this->Render('Users/activate.html', $retour);
 	}
 }
-?>

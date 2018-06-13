@@ -58,11 +58,11 @@ class PostController extends AppController
 	// ##############################################################################
 	public function ShowPost()
 	{
-		$ident 		= filter_input(INPUT_GET, 'id', FILTER_SANITIZE_INT);
+		$ident 		= filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
 		$username 	= (isset($_SESSION['nom']) && isset($_SESSION['prenom'])) ? $_SESSION['nom'].' '.$_SESSION['prenom'] : '';
 		$args		= array('posts' => $this->model->GetPostById($ident), 'comments' => $this->modelcom->getCommentListByPostId($ident), 'username' => $username);
-		
-		if(isset($_POST['token']))
+
+    	if(filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING) != null)
 			$args = array_merge($args, $this->modelcom->Add());
 		
 		$this->Render('Posts/posts.html', $args);
