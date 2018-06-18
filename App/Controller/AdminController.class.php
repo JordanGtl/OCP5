@@ -73,7 +73,7 @@ class AdminController extends AppController
 	{
 		$args = $this->admin->getPostAdd();
 		
-		if(count($_POST) > 0)
+		if(filter_input(INPUT_POST, 'titre', FILTER_SANITIZE_STRING) != null)
 			$args = array_merge($args, $this->admin->setPostAdd());
 				
 		$this->Render('Admin/postsadd.html', $args);

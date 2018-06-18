@@ -207,13 +207,13 @@ class Admin
 	{
 		if($this->CheckRank())
 		{			
-			$titre = htmlentities($_POST['titre']);
-			$contenu = nl2br(htmlentities($_POST['contenu']));		
+			$titre = filter_input(INPUT_POST, 'titre', FILTER_SANITIZE_STRING);
+			$contenu = nl2br(filter_input(INPUT_POST, 'contenu', FILTER_SANITIZE_STRING));
 			
-			if(strlen(htmlentities($_POST['contenu'])) > CHAPO_CHAR_LIMIT)
-				$chapo = substr(htmlentities($_POST['contenu']), 0, CHAPO_CHAR_LIMIT);
+			if(strlen(filter_input(INPUT_POST, 'contenu', FILTER_SANITIZE_STRING)) > CHAPO_CHAR_LIMIT)
+				$chapo = substr(filter_input(INPUT_POST, 'contenu', FILTER_SANITIZE_STRING), 0, CHAPO_CHAR_LIMIT);
 			else
-				$chapo = htmlentities($_POST['contenu']);
+				$chapo = filter_input(INPUT_POST, 'contenu', FILTER_SANITIZE_STRING);
 			
 			if($titre == '')
 				return array('statut' => 'fail', 'message' => 'Aucun titre n\'est renseigné');

@@ -2,6 +2,7 @@
 namespace App\Model;
 use App\Model\Membres;
 use App\Entity\Post;
+use Core\Objects\Session;
 
 class Posts
 {
@@ -36,7 +37,10 @@ class Posts
         $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
         $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING);
 
-        if($token != $_SESSION['token'])
+        $session = new Session();
+
+
+        if($token != $session->vars['token'])
             return array('statut' => 'fail', 'message' => 'Toekn de vérification du formulaire incorrect');
 
         if($email == '')

@@ -41,7 +41,10 @@ class UsersController extends AppController
 	// ##############################################################################
 	public function ShowLogin()
 	{
-		$args = (isset($_POST['token'])) ? $this->membre->AuthUser(): [];
+	    $args = array();
+
+		if(filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING) != null)
+		    $args = $this->membre->AuthUser();
 		
 		$this->Render('Users/connexion.html', $args);
 	}
