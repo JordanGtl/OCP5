@@ -92,7 +92,7 @@ class Admin
 			WHERE BlogPosts.Id = ?', array(intval($_GET['id'])));
 			
 			if(count($req) == 0)
-				die('Le contenu n\'existe pas');
+                return array('authorize' => false);
 						
 			$post = new Post((array)$req[0]);			
 						
