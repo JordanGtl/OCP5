@@ -382,7 +382,7 @@ class Template
 	// ##############################################################################
 	public function FormExist() : bool
 	{
-		return (count($_POST) > 0) ? true : false; 
+		return (strtoupper(filter_input(INPUT_SERVER, 'REQUEST_METHOD', FILTER_SANITIZE_STRING)) == 'POST') ? true : false;
 	}
 	
 	// ##############################################################################

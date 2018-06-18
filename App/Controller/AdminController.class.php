@@ -37,7 +37,7 @@ class AdminController extends AppController
 	{
 		if(isset($_GET['edit']))
 		{
-			if(count($_POST) > 0)
+            if(filter_input(INPUT_POST, 'titre', FILTER_SANITIZE_STRING) != null)
 			{
 				$args = $this->admin->SetPostsEdit();
 				$this->Render('Admin/postsedit.html', $args);

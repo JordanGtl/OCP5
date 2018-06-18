@@ -109,9 +109,9 @@ class Admin
 	{
 		if($this->CheckRank())
 		{
-			$id = intval($_GET['id']);	
-			$titre = htmlentities($_POST['titre']);
-			$contenu = nl2br(htmlentities($_POST['contenu']));
+			$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_STRING);
+			$titre = filter_input(INPUT_POST, 'titre', FILTER_SANITIZE_STRING);
+			$contenu = nl2br(filter_input(INPUT_POST, 'contenu', FILTER_SANITIZE_STRING));
 			
 			if($titre == "")
 				return array('authorize' => true, 'statut' => 'fail', 'message' => 'Aucun titre n\'est renseigné');
@@ -119,15 +119,15 @@ class Admin
 			if($contenu == "")
 				return array('authorize' => true, 'statut' => 'fail', 'message' => 'Aucun contenu n\'est renseigné');
 			
-			if(strlen(htmlentities($_POST['contenu'])) > CHAPO_CHAR_LIMIT)
-				$chapo = substr(htmlentities($_POST['contenu']), 0, CHAPO_CHAR_LIMIT);
+			if(strlen(filter_input(INPUT_POST, 'contenu', FILTER_SANITIZE_STRING)) > CHAPO_CHAR_LIMIT)
+				$chapo = substr(filter_input(INPUT_POST, 'contenu', FILTER_SANITIZE_STRING), 0, CHAPO_CHAR_LIMIT);
 			else
-				$chapo = htmlentities($_POST['contenu']);
+				$chapo = filter_input(INPUT_POST, 'contenu', FILTER_SANITIZE_STRING);
 
 			$req = $this->db->query('SELECT BlogPosts.Id, BlogPosts.Titre, BlogPosts.Contenu, BlogPosts.Chapo, Utilisateurs.NomDeCompte AS Auteur, BlogPosts.DerniereModification AS Date 
 			FROM BlogPosts
 			INNER JOIN Utilisateurs ON Utilisateurs.Id = BlogPosts.Auteur
-			WHERE BlogPosts.Id = ?', array(intval($_GET['id'])));
+			WHERE BlogPosts.Id = ?', array($id));
 			
 			if(count($req) == 0)
 				die('Le contenu n\'existe pas');	

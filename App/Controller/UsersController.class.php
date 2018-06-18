@@ -27,9 +27,12 @@ class UsersController extends AppController
 	public function ShowRegister()
 	{
 		$this->db = Database::getInstance();
-		
-		$args = (isset($_POST['token'])) ? $this->membre->AjoutMembre() : [];
-		
+
+        $args = [];
+
+		if(filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING) != null)
+		    $args = $this->membre->AjoutMembre();
+
 		$this->Render('Users/inscription.html', $args);
 	}
 	
@@ -97,7 +100,7 @@ class UsersController extends AppController
     {
         $args = $this->membre->getMyAccountPage();
 
-        if(count($_POST) > 0)
+        if(filter_input(INPUT_POST, 'mdp', FILTER_SANITIZE_STRING) != null)
             $args = array_merge($args, $this->membre->setMyAccountPage());
 
         $this->Render('Users/myaccount.html', $args);
