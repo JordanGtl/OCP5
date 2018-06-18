@@ -41,8 +41,13 @@ class PostController extends AppController
 
 			$posts[$i]->Link = 'index.php?page=1&id='.$posts[$i]->Id;
 		}
+
+		$args = array('posts' => $posts, 'statut' => 'success', 'message' => '');
+
+        if(filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING) != null)
+            $args = array_merge($args, $this->model->PostContact());
 		
-		$this->Render('home.html', array('posts' => $posts));
+		$this->Render('home.html', $args);
 	}
 	
 	// ##############################################################################

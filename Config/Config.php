@@ -3,6 +3,8 @@
 define('TITLE', 				'Blog - Jordan Guillot');
 define('ROOT', 					dirname(__DIR__));
 define('CHAPO_CHAR_LIMIT',		500);
+define('CONTACT_EMAIL',         'thejordan01@gmail.com');
+define('CONTACT_NAME',          'Jordan GUILLOT');
 
 # Paramètre du hash mdp
 define('PASSWORD_HASH_START', 	'd5z8f5');

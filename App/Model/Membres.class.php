@@ -40,7 +40,7 @@ class Membres
 		$token 		= filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
 		$mdp 		= filter_input(INPUT_POST, 'mdp', FILTER_SANITIZE_STRING);
 		$mdpr 		= filter_input(INPUT_POST, 'mdpr', FILTER_SANITIZE_STRING);
-		$email 		= strtolower(filter_input(INPUT_POST, 'login', FILTER_SANITIZE_EMAIL));
+		$email 		= strtolower(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
 		$nom 		= filter_input(INPUT_POST, 'nom', FILTER_SANITIZE_STRING);
 		$prenom 	= filter_input(INPUT_POST, 'prenom', FILTER_SANITIZE_STRING);
 		$captcha 	= filter_input(INPUT_POST, 'g-recaptcha-response', FILTER_SANITIZE_STRING);
@@ -203,6 +203,7 @@ class Membres
 
                 if ($user->Exist()) {
                     $token = $user->setPasswordToken();
+                    $this->database->Update('UPDATE Utilisateurs SET PasswordToken = :token WHERE Id = :id', array('id' => $user->getId(), 'token' => $token));
                     $this->SendLostPasswordMail($user->getEmail(), $user->getFullname(), $_SERVER['HTTP_HOST'] . '/index.php?page=8&token=' . $token);
 
                     return array('statut' => 'Success', 'message' => 'L\'email de récupération à été envoyé');
@@ -303,6 +304,47 @@ class Membres
 		$response = $api->post(['send', ''/*, 'v3.1'*/], ['body' => $body]);
 		$response->success();
 	}
+
+	// ##############################################################################
+	// Fonction d'envoie du mail d'inscription
+	// ##############################################################################
+	public function SendContactMail($email, $name, $message)
+	{
+		$api = new \Mailjet\Client(MAILJET_ID, MAILJET_SECRET, true,['version' => 'v3.1']);
+		$body = [
+			'Messages' => [
+				[
+					'From' => [
+                        'Email' => "noreply@gtl-studio.com",
+                        'Name' => "GTL Studio"
+					],
+					'To' => [
+						[
+							'Email' => CONTACT_EMAIL,
+							'Name' => CONTACT_NAME
+						]
+					],
+					'TemplateID' => 455238,
+					'TemplateLanguage' => true,
+
+            'Variables' => [
+                'nom' => $name,
+                'message' => $message,
+                'email' => $email
+            ],
+					"TemplateErrorDeliver" => true,
+					"TemplateErrorReporting" => [
+					"Email" => "thejordan01@gmail.com",
+					"Name" => "Air traffic control"
+					]
+				]
+			]
+
+
+		];
+		$response = $api->post(['send', ''/*, 'v3.1'*/], ['body' => $body]);
+		$response->success();
+	}
 	
 	// ##############################################################################
 	// Fonction de récupération du mot de passe perdu
@@ -353,5 +395,37 @@ class Membres
 			return array('statut' => 'Fail', 'message' => 'Le token renseigné n\'est associé à aucun compte.');
 		}		
 	}
+
+	public function getMyAccountPage()
+    {
+        $session = new Session();
+
+        $sql 	= $this->database->query('SELECT Id, NomDeCompte, Nom, Prenom, Email, NomDeCompte FROM Utilisateurs WHERE Id = ?', array($session->vars['id']));
+        $user = new Utilisateur($sql);
+
+        return array('user' => $session->vars['login'], 'nom' => $user->getName(), 'prenom' => $user->getFirstname(), 'email' => $user->getEmail());
+    }
+
+    public function setMyAccountPage()
+    {
+        $session = new Session();
+
+        $mdp = filter_input(INPUT_POST, 'mdp', FILTER_SANITIZE_STRING);
+        $mdpr = filter_input(INPUT_POST, 'mdpr', FILTER_SANITIZE_STRING);
+
+        if($mdp == '' || $mdpr == '')
+            return array('statut' => 'fail', 'message' => 'les deux champs doivent être renseignés pour modifier le mot de passe');
+
+        if($mdp != $mdpr)
+            return array('statut' => 'fail', 'message' => 'Les deux mots de passe saisie ne sont pas identiques');
+
+        $sql 	= $this->database->query('SELECT Id, NomDeCompte, Nom, Prenom, Email, NomDeCompte, MotDePasse FROM Utilisateurs WHERE Id = ?', array($session->vars['id']));
+        $user = new Utilisateur($sql);
+
+        $user->setPassword($mdp);
+        $this->database->Update('UPDATE Utilisateurs SET MotDePasse = :mdp, PasswordToken = "" WHERE Id = :id', array('id' => $user->getId(), 'mdp' => $user->getPasswordHash()));
+
+        return array('statut' => 'Succes', 'message' => 'Le mot de passe a été modifié avec succès');
+    }
 }
 ?>

@@ -114,6 +114,12 @@ class App
 				$controller->ShowWaitCom();
 				break;
 			}
+            case 13: // Mon compte
+            {
+                $controller = new \App\Controller\UsersController();
+                $controller->MyAccount();
+                break;
+            }
 			case 5: // Erreur 404
 			default:
 			{

@@ -89,4 +89,17 @@ class UsersController extends AppController
 
 		$this->Render('Users/activate.html', $retour);
 	}
+
+    // ##############################################################################
+    // Controller d'affichage de la page mon compte
+    // ##############################################################################
+    public function MyAccount()
+    {
+        $args = $this->membre->getMyAccountPage();
+
+        if(count($_POST) > 0)
+            $args = array_merge($args, $this->membre->setMyAccountPage());
+
+        $this->Render('Users/myaccount.html', $args);
+    }
 }

@@ -1,5 +1,6 @@
 <?php
 namespace App\Model;
+use App\Model\Membres;
 use App\Entity\Post;
 
 class Posts
@@ -27,6 +28,34 @@ class Posts
 		
 		return self::$_instance;
 	}
+
+	public function PostContact()
+    {
+        $token = filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+        $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+        $message = filter_input(INPUT_POST, 'message', FILTER_SANITIZE_STRING);
+
+        if($token != $_SESSION['token'])
+            return array('statut' => 'fail', 'message' => 'Toekn de vérification du formulaire incorrect');
+
+        if($email == '')
+            return array('statut' => 'fail', 'message' => 'Aucune adresse email renseignée');
+
+        if($name == '')
+            return array('statut' => 'fail', 'message' => 'Aucun nom renseigné');
+
+        if($message == '')
+            return array('statut' => 'fail', 'message' => 'Aucun message renseigné');
+
+        if(!filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL))
+            return array('statut' => 'fail', 'message' => 'L\'adresse email n\'est pas valide');
+
+        $membre = new Membres();
+        $membre->SendContactMail($email, $name, $message);
+
+        return array('statut' => 'success', 'message' => 'Email envoyé, vous recevrez une réponse dans les plus bref délais');
+    }
 
 	// ##############################################################################
 	// Récupère les dernier posts

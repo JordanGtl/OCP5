@@ -2,6 +2,7 @@
 namespace App\Entity;
 
 use \Core\Entity\Entity;
+use Exception;
 
 define('USER_ID', 0);
 define('USER_LOGIN', 1);
@@ -61,9 +62,25 @@ class Utilisateur extends Entity
 	{
 		return (isset($this->Nom) && isset($this->Prenom)) ? ucfirst($this->Nom).' '.ucfirst($this->Prenom) : '';
 	}
-	
+
 	// ##############################################################################
-	// Fonction de vérification ud mot de passe
+	// Fonction qui retourne le nom de famille
+	// ##############################################################################
+	public function getName() : string
+	{
+		return $this->Nom ?? '';
+	}
+
+	// ##############################################################################
+	// Fonction qui retourne le prenom
+	// ##############################################################################
+	public function getFirstname() : string
+	{
+		return $this->Prenom ?? '';
+	}
+
+	// ##############################################################################
+	// Fonction de vérification du mot de passe
 	// ##############################################################################
 	public function getPasswordHash()
 	{
@@ -84,9 +101,10 @@ class Utilisateur extends Entity
 	public function setPasswordToken() : string
 	{
 		$token = md5(uniqid(rand(), TRUE));
-		
-		$this->db->Update('UPDATE Utilisateurs SET PasswordToken = :token WHERE Id = :id', array('id' => $this->Id, 'token' => $token));
-		
+
+		if(isset($this->Token))
+		    $this->Token = $token;
+
 		return $token;
 	}
 	

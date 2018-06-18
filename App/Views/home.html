@@ -43,7 +43,7 @@
     </section>
 
     <!-- About Section -->
-    <section class="success" id="about">
+    <section id="about">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
@@ -81,7 +81,7 @@
                     <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
                     <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
                     <form name="sentContact"  method="post" action="index.php">
-                        <div>mailresult</div>
+                        <div class="{{statut}}">{{message}}</div>
 						<input type="hidden" name="token" value="{{Core\Html\Form->generateToken()}}" />
 						<div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
@@ -93,7 +93,7 @@
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <label>Adresse email</label>
-                                <input type="text" name="email" class="form-control" placeholder="Adresse email" id="email" required pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/" />
+                                <input type="text" name="email" class="form-control" placeholder="Adresse email" id="email" />
                                 <p class="help-block text-danger"></p>
                             </div>
                         </div>
