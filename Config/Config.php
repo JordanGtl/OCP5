@@ -1,14 +1,16 @@
 <?php
-# Paramètres du site
-define('TITLE', 				'Blog - Jordan Guillot');
+# Ne pas modifier (paramètres avancés)
 define('ROOT', 					dirname(__DIR__));
 define('CHAPO_CHAR_LIMIT',		500);
-define('CONTACT_EMAIL',         'thejordan01@gmail.com');
-define('CONTACT_NAME',          'Jordan GUILLOT');
 
 # Paramètre du hash mdp
 define('PASSWORD_HASH_START', 	'd5z8f5');
 define('PASSWORD_HASH_END', 	'df57hf5');
+
+# Paramètres du site
+define('TITLE', 				'Blog - Jordan Guillot');
+define('CONTACT_EMAIL',         'thejordan01@gmail.com');
+define('CONTACT_NAME',          'Jordan GUILLOT');
 
 # paramètre API mailjet
 define('MAILJET_ID', 			'876b017e0628afe3008af7729b3f970a');
