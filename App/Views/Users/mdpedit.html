@@ -10,7 +10,10 @@
 					<div style="" class="p-4 bg-light text-dark loginBlock">
 						<h3>Bonjour <b>{{user}}</b></h3>
 						<small>Veuillez saisir un nouveau mot de passe</small>
-						<div style="padding-bottom:10px" class="{{statut}}">{{Message}}</div>
+						
+						{{IF:Tp->FormExist()}}
+						<div style="padding-bottom:10px" class="{{statut}}">{{message}}<br /> <a href="{{link}}">Continuer</a></div>
+						{{ELSE}}
 						<form method="post" action="">
 						  <input type="hidden" name="token" value="{{Core\Html\Form->generateToken()}}"/>
 						  <div class="form-group">
@@ -23,6 +26,7 @@
 						  </div>
 						  <button type="submit" class="btn btn-primary">Récupérer mon compte</button>
 						</form>
+						{{ENDIF}}
 					</div>
 					{{ELSE}}
 					<div style="" class="p-4 bg-light text-dark loginBlock">

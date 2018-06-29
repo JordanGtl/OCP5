@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use Core\Controller\Controller;
+use Core\Objects\Session;
 use App\Controller\AppController;
 use App\Model\Membres;
 use \App\Model\Database;
@@ -101,11 +102,18 @@ class UsersController extends AppController
     // ##############################################################################
     public function MyAccount()
     {
-        $args = $this->membre->getMyAccountPage();
+       $session = new Session();
+		
+		if(!isset($session->vars['login']))
+			$this->Render('Users/nologged.html');
+		else	
+		{
+			 $args = $this->membre->getMyAccountPage();
 
-        if(filter_input(INPUT_POST, 'mdp', FILTER_SANITIZE_STRING) != null)
-            $args = array_merge($args, $this->membre->setMyAccountPage());
-
-        $this->Render('Users/myaccount.html', $args);
+			if(filter_input(INPUT_POST, 'mdp', FILTER_SANITIZE_STRING) != null)
+				$args = array_merge($args, $this->membre->setMyAccountPage());
+			
+			$this->Render('Users/myaccount.html', $args);
+		}
     }
 }

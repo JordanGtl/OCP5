@@ -351,7 +351,7 @@ class Membres
 	// ##############################################################################
 	public function SetLostPassword()
 	{
-		$token 	= filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
+		$token 	= filter_input(INPUT_GET, 'token', FILTER_SANITIZE_STRING);
 		$mdp 	= filter_input(INPUT_POST, 'mdp', FILTER_SANITIZE_STRING);
 		$mdpr 	= filter_input(INPUT_POST, 'mdpr', FILTER_SANITIZE_STRING);
 		
@@ -364,14 +364,14 @@ class Membres
 			{
 				$user->setPassword($mdp);
 				$this->database->Update('UPDATE Utilisateurs SET MotDePasse = :mdp, PasswordToken = "" WHERE Id = :id', array('id' => $user->getId(), 'mdp' => $user->getPasswordHash()));
-				return array('Statut' => 'Succes', 'Message' => 'Mot de passe modifié avec succès, vous pouvez vous connecter.');
+				return array('statut' => 'Success', 'message' => 'Mot de passe modifié avec succès, vous pouvez vous connecter.', 'link' => 'index.php?page=3');
 			}
 			else
-				return array('Statut' => 'Fail', 'Message' => 'Les deux mot de passes saisie ne sont pas identique.');
+				return array('statut' => 'Fail', 'message' => 'Les deux mot de passes saisie ne sont pas identique.', 'link' => 'index.php?page=8&token='.$token);
 		}
 		else
 		{
-			return array('Statut' => 'Fail', 'Message' => 'Aucun utilisateur associé à ce token.');
+			return array('statut' => 'Fail', 'message' => 'Aucun utilisateur associé à ce token.', 'link' => 'index.php?page=8&token='.$token);
 		}		
 		
 	}

@@ -69,6 +69,7 @@ class Posts
 		$req 	= $this->database->query('SELECT BlogPosts.Id, BlogPosts.Titre, BlogPosts.Picture, BlogPosts.Chapo, BlogPosts.Auteur, 
 		(SELECT COUNT(PostsCommentaire.Id) FROM PostsCommentaire WHERE PostsCommentaire.IdPost = BlogPosts.Id AND PostsCommentaire.Statut = 1) AS NbrComment 
 		FROM BlogPosts  
+		ORDER BY Id DESC
 		LIMIT 0,6');
 		$return = array();
 		
